@@ -202,3 +202,72 @@ def getUsers():
     users = User.query.all()
     result = usersSchema.dump(users)
     return jsonify(result)
+
+# API to get all logins
+@api.route("/logins", methods=["GET"])
+def getLogins():
+    """
+    Retrieve logins' information from database.
+    Returns:
+        JSON: User information ("LoginID", "UserName", "Password")
+    """
+    logins = Login.query.all()
+    result = loginSchema.dump(logins)
+    return jsonify(result)
+
+
+# API to get all cars
+@api.route("/cars", methods=["GET"])
+def getCars():
+    """
+    Retrieve cars information from database.
+    Returns:
+        JSON: Car information ("CarID", "Make", "Type", "Location", "Color", "Seats", "CostPerHour","Status")
+    """
+    cars = Car.query.all()
+    result = carsSchema.dump(cars)
+    return jsonify(result)
+
+# API to delete user by username
+@api.route("/removeUser/<username>", methods = ["GET", "POST"])
+def removeUser(username):
+    """
+    Remove user from database.
+    Args:
+        username (str): User's login identifier.
+
+    Returns:
+        Need to fill
+    """
+    userToBeDeleted = User.query.filter_by(UserName = username).one()
+    loginToBeDeleted = Login.query.filter_by(UserName = username).one()
+    
+    try:
+        db.session.delete(userToBeDeleted)
+        db.session.delete(loginToBeDeleted)
+        db.session.commit()
+    except:
+        flask.flash('Unable to delete user')
+    
+    return {"message": "Success"}
+
+# API to delete car by carId
+@api.route("/removeCar/<carId>", methods = ["GET", "POST"])
+def removeCar(carId):
+    """
+    Remove car from database.
+    Args:
+        carId (str): Car's unique identifier.
+        
+    Returns:
+        Need to fill
+    """
+    carToBeDeleted = Car.query.filter_by(CarID = carId).one()
+    
+    try:
+        db.session.delete(carToBeDeleted)
+        db.session.commit()
+    except:
+        flask.flash('Unable to delete car')
+    
+    return {"message": "Success"}
