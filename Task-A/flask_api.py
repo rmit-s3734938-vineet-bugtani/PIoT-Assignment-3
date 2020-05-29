@@ -4,6 +4,7 @@ Contains the database schema to allow mapping to the database table.
 from flask import Flask, Blueprint, request, jsonify, render_template,redirect,url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from sqlalchemy import extract
 
 api = Blueprint("api", __name__)
 
@@ -271,3 +272,35 @@ def removeCar(carId):
         flask.flash('Unable to delete car')
     
     return {"message": "Success"}
+
+# API to get bookings by month
+@api.route("/bookings/<month>", methods=["GET"])
+def getAllBookings(month):
+    """
+    Get all bookings by month from database.
+
+    Returns:
+        JSON: Booking information (e.g 
+        - "BookingID",
+        - "PickUpDate",
+        - "PickUpTime",
+        - "ReturnDate",
+        - "ReturnTime",
+        - "CarID",
+        - "UserName")
+    """
+    bookings = Booking.query.filter(extract('month', Booking.PickUpDate) == month)
+    result = bookingSchema.dump(bookings)
+    return jsonify(result)
+
+# API to get bookings by car type
+@api.route("/bookingsByCarType/<type>", methods=["GET"])
+def getbookingsByCarType(type):
+    """
+    Get all bookings by car type from database.
+
+    """
+    bookings = Booking.query.join(
+    Car, Car.CarID == Booking.CarID).filter(Car.Type == type)
+    result = bookingSchema.dump(bookings)
+    return jsonify(result)
