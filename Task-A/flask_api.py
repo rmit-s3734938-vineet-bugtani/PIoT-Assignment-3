@@ -1,0 +1,273 @@
+"""
+Contains the database schema to allow mapping to the database table.
+"""
+from flask import Flask, Blueprint, request, jsonify, render_template,redirect,url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+
+api = Blueprint("api", __name__)
+
+db = SQLAlchemy()
+ma = Marshmallow()
+
+# Declaring the model.
+class Car(db.Model):
+    """
+    The database schema for the Car table.
+    """
+    __tablename__ = "Car"
+    CarID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Make = db.Column(db.Text)
+    Type = db.Column(db.Text)
+    Location = db.Column(db.Text)
+    Color = db.Column(db.Text)
+    Seats = db.Column(db.Text)
+    CostPerHour = db.Column(db.Text)
+    Status = db.Column(db.Text)
+
+    def __init__(self, Make, Type, Location, Color, Seats,Status, CostPerHour, CarID=None):
+        self.CarID = CarID
+        self.Make = Make
+        self.Type = Type
+        self.Location = Location
+        self.Color = Color
+        self.Seats = Seats
+        self.CostPerHour = CostPerHour,
+        self.Status = Status
+
+
+class User(db.Model):
+    """
+    The database schema for the User table.
+    """
+    __tablename__ = "User"
+    UserID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    FirstName = db.Column(db.Text)
+    LastName = db.Column(db.Text)
+    UserName = db.Column(db.Text)
+    Email = db.Column(db.Text)
+    Role = db.Column(db.Text)
+    credentials = db.Column(db.JSON)
+
+    def __init__(self, FirstName, LastName, UserName, Email, Role, UserID=None):
+        self.UserID = UserID
+        self.FirstName = FirstName
+        self.LastName = LastName
+        self.UserName = UserName
+        self.Email = Email
+        self.Role = Role
+
+
+class Login(db.Model):
+    """
+    The database schema for the Login table.
+    """
+    __tablename__ = "Login"
+    LoginID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    UserName = db.Column(db.Text)
+    Password = db.Column(db.Text)
+
+    def __init__(self, Password, UserName, LoginID=None):
+        self.LoginID = LoginID
+        self.UserName = UserName
+        self.Password = Password
+
+class Booking(db.Model):
+    """
+    The database schema for the Booking table.
+    """
+    __tablename__ = "Booking"
+    BookingID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    PickUpDate = db.Column(db.Date)
+    PickUpTime = db.Column(db.Time)
+    ReturnDate = db.Column(db.Date)
+    ReturnTime = db.Column(db.Time)
+    CarID = db.Column(db.Integer)
+    UserName = db.Column(db.Text)
+    eventId = db.Column(db.Text)
+
+    def __init__(
+        self,
+        PickUpDate,
+        PickUpTime,
+        ReturnDate,
+        ReturnTime,
+        CarID,
+        UserName,
+        BookingID=None,
+    ):
+        self.BookingID = BookingID
+        self.PickUpDate = PickUpDate
+        self.PickUpTime = PickUpTime
+        self.ReturnDate = ReturnDate
+        self.ReturnTime = ReturnTime
+        self.CarID = CarID
+        self.UserName = UserName
+
+class CarSchema(ma.Schema):
+    """
+    Format Car schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = ("CarID", "Make", "Type", "Location", "Color", "Seats", "CostPerHour","Status")
+
+carsSchema = CarSchema()
+carsSchema = CarSchema(many=True)
+
+class UserSchema(ma.Schema):
+    """
+    Format User schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = ("UserID", "FirstName", "LastName", "UserName", "Email", "Role")
+
+usersSchema = UserSchema()
+usersSchema = UserSchema(many=True)
+
+class LoginSchema(ma.Schema):
+    """
+    Format Login schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = ("LoginID", "UserName", "Password")
+
+loginSchema = LoginSchema()
+loginSchema = LoginSchema(many=True)
+
+class BookingSchema(ma.Schema):
+    """
+    Format Booking schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = (
+            "BookingID",
+            "PickUpDate",
+            "PickUpTime",
+            "ReturnDate",
+            "ReturnTime",
+            "CarID",
+            "UserName",
+        )
+
+class BookingDetailsSchema(ma.Schema):
+    """
+    Format Booking Detail schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = (
+            "BookingID",
+            "PickUpDate",
+            "PickUpTime",
+            "ReturnDate",
+            "ReturnTime",
+            "UserName",
+            "CarID",
+            "Make",
+            "Type",
+            "Location",
+            "Color",
+            "Seats",
+            "CostPerHour",
+        )
+
+bookingSchema = BookingSchema()
+bookingSchema = BookingSchema(many=True)
+
+bookingDetailsSchema = BookingDetailsSchema()
+bookingDetailsSchema = BookingDetailsSchema(many=True)
+
+# API to get all users
+@api.route("/users", methods=["GET"])
+def getUsers():
+    """
+    Retrieve users' information from database.
+    Returns:
+        JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
+    """
+    users = User.query.all()
+    result = usersSchema.dump(users)
+    return jsonify(result)
+
+# API to get all logins
+@api.route("/logins", methods=["GET"])
+def getLogins():
+    """
+    Retrieve logins' information from database.
+    Returns:
+        JSON: User information ("LoginID", "UserName", "Password")
+    """
+    logins = Login.query.all()
+    result = loginSchema.dump(logins)
+    return jsonify(result)
+
+
+# API to get all cars
+@api.route("/cars", methods=["GET"])
+def getCars():
+    """
+    Retrieve cars information from database.
+    Returns:
+        JSON: Car information ("CarID", "Make", "Type", "Location", "Color", "Seats", "CostPerHour","Status")
+    """
+    cars = Car.query.all()
+    result = carsSchema.dump(cars)
+    return jsonify(result)
+
+# API to delete user by username
+@api.route("/removeUser/<username>", methods = ["GET", "POST"])
+def removeUser(username):
+    """
+    Remove user from database.
+    Args:
+        username (str): User's login identifier.
+
+    Returns:
+        Need to fill
+    """
+    userToBeDeleted = User.query.filter_by(UserName = username).one()
+    loginToBeDeleted = Login.query.filter_by(UserName = username).one()
+    
+    try:
+        db.session.delete(userToBeDeleted)
+        db.session.delete(loginToBeDeleted)
+        db.session.commit()
+    except:
+        flask.flash('Unable to delete user')
+    
+    return {"message": "Success"}
+
+# API to delete car by carId
+@api.route("/removeCar/<carId>", methods = ["GET", "POST"])
+def removeCar(carId):
+    """
+    Remove car from database.
+    Args:
+        carId (str): Car's unique identifier.
+        
+    Returns:
+        Need to fill
+    """
+    carToBeDeleted = Car.query.filter_by(CarID = carId).one()
+    
+    try:
+        db.session.delete(carToBeDeleted)
+        db.session.commit()
+    except:
+        flask.flash('Unable to delete car')
+    
+    return {"message": "Success"}
