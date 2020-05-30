@@ -332,8 +332,8 @@ def getAllBookings(month):
     return jsonify(result)
 
 # API to get repairs by month
-@api.route("/repairs/<month>", methods=["GET"])
-def getAllRepairs(month):
+@api.route("/repairsByMonth/<month>", methods=["GET"])
+def getRepairsByMonth(month):
     """
     Get all repairs by month from database.
 
@@ -342,6 +342,20 @@ def getAllRepairs(month):
     """
     repairs = Repairs.query.filter(extract('month', Repairs.AssignedDate) == month)
     result = repairsSchema.dump(repairs)
+    return jsonify(result)
+
+# API to get pending repairs by engineer's username
+@api.route("/repairsByUsername/<username>", methods=["GET"])
+def getPendingRepairsByUsername(username):
+    """
+    Get all repairs by username from database.
+
+    Returns:
+        JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
+    """
+    repairs = Car.query.join(
+    Repairs, Car.CarID == Repairs.CarID).filter(Repairs.UserName == username, Repairs.Status == 'Pending')
+    result = carsSchema.dump(repairs)
     return jsonify(result)
 
 # API to get bookings by car type
