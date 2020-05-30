@@ -10,8 +10,25 @@ import json, requests
 site = flask.Blueprint("site", __name__)
 
 @site.route('/graphs', methods=["GET", "POST"])
-def main():
+def graphs():
     return flask.render_template('index.html')
+
+@site.route('/gmaps', methods=["GET", "POST"])
+def gmaps():
+    # Remove this line after login is implemented
+    flask.session['username'] = 'mWoods'
+    response = requests.get(
+        flask.request.host_url + "/repairsByUsername/" + flask.session['username']
+    )
+    data = json.loads(response.text)
+    lats = []
+    lngs = []
+    for x in data:
+        y = json.loads(x["Location"])
+        lats.append(y["location"]["lat"])
+        lngs.append(y["location"]["lng"])
+    return flask.render_template('gmaps.html',lats=lats,lngs=lngs)
+
 
 @site.route('/getBarGraphData', methods=["GET", "POST"])
 def getBookingsByMonth():
@@ -48,7 +65,7 @@ def getRepairsByMonth():
     repairs = []
     for x in range(11):
         response = requests.get(
-        flask.request.host_url + "/repairs/" + str(x)
+        flask.request.host_url + "/repairsByMonth/" + str(x)
     )
         data = json.loads(response.text)
         repairs.append(len(data))
