@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_api import *
 from flask_admin import expose, AdminIndexView, Admin, BaseView
 from flask_admin.contrib.sqla import ModelView
+from app import site
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
@@ -16,7 +17,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db.init_app(app)
 
 app.register_blueprint(api)
-# app.register_blueprint(site)
+app.register_blueprint(site)
 
 admin = Admin(app)
 '''
