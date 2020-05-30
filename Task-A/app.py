@@ -13,7 +13,7 @@ site = flask.Blueprint("site", __name__)
 def main():
     return flask.render_template('index.html')
 
-@site.route('/getLineGraphData', methods=["GET", "POST"])
+@site.route('/getBarGraphData', methods=["GET", "POST"])
 def getBookingsByMonth():
     bookings = []
     for x in range(11):
@@ -42,6 +42,21 @@ def getbookingsByCarType():
         "types":types
     }
     return data
+
+@site.route('/getLineGraphData', methods=["GET", "POST"])
+def getRepairsByMonth():
+    repairs = []
+    for x in range(11):
+        response = requests.get(
+        flask.request.host_url + "/repairs/" + str(x)
+    )
+        data = json.loads(response.text)
+        repairs.append(len(data))
+    data = {
+        "repairs":repairs
+    }
+    return data
+
 
 
 

@@ -45,19 +45,19 @@
       <div class="row">
         <div class="bar-chart col-md-6">
           <p style="text-align: center;">
-            Line graph showing Month wise Bookings
+            Bar graph showing Month wise Bookings
           </p>
         </div>
         <div class="pie-chart col-md-6 ">
           <p style="text-align: center;">Pie chart showing car types booked</p>
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-content-center">
         <div
-          class="col-md-12"
-          style="margin-top: 100px;border: 1px solid black;"
+          class="line-chart col-md-6"
+          style="margin-top: 100px"
         >
-          <p style="text-align: center;">Third graph</p>
+          <p style="text-align: center;">Line graph showing repairs done month wise</p>
         </div>
       </div>
     </div>
@@ -97,11 +97,20 @@
             );
           }
         })
-        // .on("draw", function(context) {
-        //   context.element.attr({
-        //     style: "fill:  blue"
-        //   });
-        // });
+      }
+      function createLineGraph(xData, YData) {
+        var data = {
+          labels: XData,
+          series: [YData]
+        };
+        var options = {
+          width: "500px",
+          height: "500px",
+          axisY: {
+            onlyInteger: true
+          }
+        };
+        new Chartist.Line(".line-chart", data, options);
       }
 
       var XData = [
@@ -118,12 +127,16 @@
         "Nov",
         "Dec"
       ];
-      var data = $.get("/getLineGraphData");
+      var data = $.get("/getBarGraphData");
       var tm = data.done(function(resp) {
         createBarGraph(XData, resp.bookings);
-        var dataa = $.get("/getPieGraphData");
-        var tmm = dataa.done(function(resp) {
+        var pieGraphData = $.get("/getPieGraphData");
+        var tmm = pieGraphData.done(function(resp) {
           createPieGraph(resp.bookings, resp.types);
+        });
+        var lineGraphData = $.get("/getLineGraphData");
+        var tmmm = lineGraphData.done(function(resp) {
+          createLineGraph(XData, resp.repairs);
         });
       });
     </script>

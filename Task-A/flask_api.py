@@ -105,6 +105,44 @@ class Booking(db.Model):
         self.CarID = CarID
         self.UserName = UserName
 
+class Repairs(db.Model):
+    """
+    The database schema for the Repairs table.
+    """
+    __tablename__ = "Repairs"
+    RepairID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    AssignedDate = db.Column(db.Date)
+    CarID = db.Column(db.Integer)
+    UserName = db.Column(db.Text)
+    Status = db.Column(db.Text)
+
+    def __init__(
+        self,
+        AssignedDate,
+        CarID,
+        UserName,
+        Status,
+        RepairID=None,
+    ):
+        self.RepairID = RepairID
+        self.AssignedDate = AssignedDate
+        self.Status = Status
+        self.CarID = CarID
+        self.UserName = UserName
+
+class RepairsSchema(ma.Schema):
+    """
+    Format Repairs schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
+
+repairsSchema = RepairsSchema()
+repairsSchema = RepairsSchema(many=True)
+
 class CarSchema(ma.Schema):
     """
     Format Car schema output with marshmallow.
@@ -291,6 +329,19 @@ def getAllBookings(month):
     """
     bookings = Booking.query.filter(extract('month', Booking.PickUpDate) == month)
     result = bookingSchema.dump(bookings)
+    return jsonify(result)
+
+# API to get repairs by month
+@api.route("/repairs/<month>", methods=["GET"])
+def getAllRepairs(month):
+    """
+    Get all repairs by month from database.
+
+    Returns:
+        JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
+    """
+    repairs = Repairs.query.filter(extract('month', Repairs.AssignedDate) == month)
+    result = repairsSchema.dump(repairs)
     return jsonify(result)
 
 # API to get bookings by car type
