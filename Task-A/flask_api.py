@@ -5,6 +5,9 @@ from flask import Flask, Blueprint, request, jsonify, render_template,redirect,u
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import extract
+import flask
+import json, requests
+from flask_admin.contrib.sqla import ModelView
 
 api = Blueprint("api", __name__)
 
@@ -41,6 +44,7 @@ class User(db.Model):
     """
     The database schema for the User table.
     """
+    column_list = ('FirstName','LastName','UserName','Email','Role')
     __tablename__ = "User"
     UserID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     FirstName = db.Column(db.Text)
@@ -223,6 +227,35 @@ class BookingDetailsSchema(ma.Schema):
             "Seats",
             "CostPerHour",
         )
+
+class RepairDetailsSchema(ma.Schema):
+    """
+    Format Repair Detail schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = (
+            "RepairID", 
+            "AssignedDate", 
+            "Status",
+            "UserName",
+            "CarID",
+            "Make",
+            "Type",
+            "Location",
+            "Color",
+            "Seats",
+            "CostPerHour",
+        )
+
+class BookingModelView(ModelView):
+    can_create = False
+    column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
+
+class UserModelView(ModelView):
+    column_list = ('FirstName','LastName','UserName','Email','Role')
 
 bookingSchema = BookingSchema()
 bookingSchema = BookingSchema(many=True)
