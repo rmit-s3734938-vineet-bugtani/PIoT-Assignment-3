@@ -16,9 +16,9 @@ def graphs():
 @site.route('/gmaps', methods=["GET", "POST"])
 def gmaps():
     # Remove this line after login is implemented
-    flask.session['username'] = 'mWoods'
+    flask.session['username'] = 'jPonting'
     response = requests.get(
-        flask.request.host_url + "/repairsByUsername/" + flask.session['username']
+        flask.request.host_url + "/pendingRepairsByUsername/" + flask.session['username']
     )
     data = json.loads(response.text)
     lats = []

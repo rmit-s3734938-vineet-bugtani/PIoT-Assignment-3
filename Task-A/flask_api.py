@@ -5,6 +5,8 @@ from flask import Flask, Blueprint, request, jsonify, render_template,redirect,u
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import extract
+import flask
+import json, requests
 
 api = Blueprint("api", __name__)
 
@@ -224,11 +226,36 @@ class BookingDetailsSchema(ma.Schema):
             "CostPerHour",
         )
 
+class RepairDetailsSchema(ma.Schema):
+    """
+    Format Repair Detail schema output with marshmallow.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    class Meta:
+        fields = (
+            "RepairID", 
+            "AssignedDate", 
+            "Status",
+            "UserName",
+            "CarID",
+            "Make",
+            "Type",
+            "Location",
+            "Color",
+            "Seats",
+            "CostPerHour",
+        )
+
 bookingSchema = BookingSchema()
 bookingSchema = BookingSchema(many=True)
 
 bookingDetailsSchema = BookingDetailsSchema()
 bookingDetailsSchema = BookingDetailsSchema(many=True)
+
+repairDetailsSchema = RepairDetailsSchema()
+repairDetailsSchema = RepairDetailsSchema(many=True)
 
 # API to get all users
 @api.route("/users", methods=["GET"])
@@ -345,17 +372,55 @@ def getRepairsByMonth(month):
     return jsonify(result)
 
 # API to get pending repairs by engineer's username
-@api.route("/repairsByUsername/<username>", methods=["GET"])
+@api.route("/pendingRepairsByUsername/<username>", methods=["GET"])
 def getPendingRepairsByUsername(username):
     """
-    Get all repairs by username from database.
+    Get all pending repairs by username from database.
 
     Returns:
         JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
     """
     repairs = Car.query.join(
-    Repairs, Car.CarID == Repairs.CarID).filter(Repairs.UserName == username, Repairs.Status == 'Pending')
-    result = carsSchema.dump(repairs)
+    Repairs, Car.CarID == Repairs.CarID).add_columns(
+            Repairs.RepairID,
+            Repairs.AssignedDate,
+            Repairs.Status,
+            Repairs.CarID,
+            Car.CarID,
+            Car.Make,
+            Car.Type,
+            Car.Location,
+            Car.Color,
+            Car.Seats,
+            Car.CostPerHour,
+        ).filter(Repairs.UserName == username, Repairs.Status == 'Pending')
+    result = repairDetailsSchema.dump(repairs)
+    return jsonify(result)
+
+# API to get all repairs by engineer's username
+@api.route("/repairsByUsername/<username>", methods=["GET"])
+def getRepairsByUsername(username):
+    """
+    Get all repairs by username from database.
+
+    Returns:
+        JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName","Make","Type","Color","Seats","Location","CostPerHour")
+    """
+    repairs = Car.query.join(
+    Repairs, Car.CarID == Repairs.CarID).add_columns(
+            Repairs.RepairID,
+            Repairs.AssignedDate,
+            Repairs.Status,
+            Repairs.CarID,
+            Car.CarID,
+            Car.Make,
+            Car.Type,
+            Car.Location,
+            Car.Color,
+            Car.Seats,
+            Car.CostPerHour,
+        ).filter(Repairs.UserName == username)
+    result = repairDetailsSchema.dump(repairs)
     return jsonify(result)
 
 # API to get bookings by car type
@@ -369,3 +434,24 @@ def getbookingsByCarType(type):
     Car, Car.CarID == Booking.CarID).filter(Car.Type == type)
     result = bookingSchema.dump(bookings)
     return jsonify(result)
+
+# API to get engineer profile by username
+@api.route("/engineer/<username>", methods=["GET"])
+def getEngineerByUsername(username):
+    """
+    Retrieve engineer' information from database.
+    Returns:
+        JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
+    """
+    users = User.query.filter(User.UserName == username )
+    result = usersSchema.dump(users)
+    response = requests.get(
+        flask.request.host_url + "/repairsByUsername/" + username
+    )
+    data = json.loads(response.text)
+    print(len(data))
+    result[0]['Number of repairs assigned'] = len(data)
+    result[0]['Repair history'] = data
+    jsonResult = jsonify(result)
+    
+    return jsonResult
