@@ -228,28 +228,6 @@ class BookingDetailsSchema(ma.Schema):
             "CostPerHour",
         )
 
-class RepairDetailsSchema(ma.Schema):
-    """
-    Format Repair Detail schema output with marshmallow.
-    """
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    class Meta:
-        fields = (
-            "RepairID", 
-            "AssignedDate", 
-            "Status",
-            "UserName",
-            "CarID",
-            "Make",
-            "Type",
-            "Location",
-            "Color",
-            "Seats",
-            "CostPerHour",
-        )
-
 class BookingModelView(ModelView):
     can_create = False
     column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
