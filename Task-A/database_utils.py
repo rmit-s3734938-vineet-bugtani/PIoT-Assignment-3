@@ -53,14 +53,20 @@ class DatabaseUtils:
             cursor.execute("insert into User (FirstName,LastName,UserName,Email,Role) values ('Peter','Cooper','pCooper','peter.cooper@gmail.com','Engineer')")
             cursor.execute("insert into User (FirstName,LastName,UserName,Email,Role) values ('John','Stocks','jStocks','john.stocks@gmail.com','Engineer')")
 
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (1,'mWoods','2020-01-26','Done')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (2,'jStocks','2020-01-26','Done')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (3,'mWoods','2020-02-26','Done')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (4,'pAdams','2020-02-26','Done')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (5,'mWoods','2020-06-26','Pending')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (6,'jPonting','2020-06-26','Pending')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (7,'pCooper','2020-06-26','Pending')")
-            cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (8,'jPonting','2020-06-26','Pending')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (1,'mWoods','2020-01-26','Done')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (2,'jStocks','2020-01-26','Done')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (3,'mWoods','2020-02-26','Done')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (4,'pAdams','2020-02-26','Done')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (5,'mWoods','2020-06-26','Pending')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (6,'jPonting','2020-06-26','Pending')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (7,'pCooper','2020-06-26','Pending')")
+            # cursor.execute("insert into Repairs (CarID,UserName,AssignedDate,Status) values (8,'jPonting','2020-06-26','Pending')")
+
+            # cursor.execute("insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values ('2020-04-27','01:00:00','2020-04-27','01:00:00','1','s3734938')")
+            # cursor.execute("insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values ('2020-04-27','01:00:00','2020-04-27','01:00:00','2','s3734938')")
+            # cursor.execute("insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values ('2020-04-27','01:00:00','2020-04-27','01:00:00','3','s3734938')")
+            # cursor.execute("insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values ('2020-04-27','01:00:00','2020-04-27','01:00:00','4','s3734938')")
+            # cursor.execute("insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values ('2020-04-27','01:00:00','2020-04-27','01:00:00','5','s3734938')")
    
            
         self.connection.commit()
