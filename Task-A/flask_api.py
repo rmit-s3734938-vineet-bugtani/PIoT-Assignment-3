@@ -8,6 +8,10 @@ from sqlalchemy import extract
 import flask
 import json, requests
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.actions import action
+from forms import RepairsForm
+from datetime import date, time
+from app import site
 
 api = Blueprint("api", __name__)
 
@@ -235,6 +239,11 @@ class BookingModelView(ModelView):
 class UserModelView(ModelView):
     column_list = ('FirstName','LastName','UserName','Email','Role')
 
+class CarModelView(ModelView):
+    @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
+    def action_approve(self, ids):
+        return flask.redirect(url_for('site.reportFault', ids = ids))
+
 bookingSchema = BookingSchema()
 bookingSchema = BookingSchema(many=True)
 
@@ -380,3 +389,27 @@ def getbookingsByCarType(type):
     Car, Car.CarID == Booking.CarID).filter(Car.Type == type)
     result = bookingSchema.dump(bookings)
     return jsonify(result)
+
+# API to assign faulty cars
+@api.route("/reportFaults", methods=["GET", "POST"])
+def reportFaults():
+    """
+    Report faulty cars into the database.
+
+    Returns:
+        JSON: "message": "This email is already registered with another account"/"This username is already taken"/"Success"
+    """
+    data = request.get_json(force=True)
+
+    engineerName = data["engineerName"]
+    carIds = data["carIds"]
+    for x in carIds:
+        newRepair = Repairs(
+            CarID=x,
+            UserName=engineerName,
+            AssignedDate=date.today().isoformat(),
+            Status="Pending"
+        )
+        db.session.add(newRepair)
+    db.session.commit()
+    return jsonify({"message": "Success"})

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="mb-4">Repair form</legend>
+                <div class="form-group">
+                    {{ form.engineerName.label(class="form-control-label") }}
+                    {% if form.engineerName.errors %}
+                        {{ form.engineerName(class="form-control form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.engineerName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.engineerName(class="form-control form-control") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+</div>
+    
+{% endblock content %}

@@ -24,7 +24,7 @@ admin = Admin(app)
 Add admin view using the flask_admin package
 '''
 
-admin.add_view(ModelView(Car,db.session))
+admin.add_view(CarModelView(Car,db.session))
 admin.add_view(UserModelView(User,db.session))
 admin.add_view(BookingModelView(Booking,db.session))
 
