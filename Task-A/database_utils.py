@@ -72,8 +72,8 @@ class DatabaseUtils:
             # cursor.execute("insert into Login (UserName,Password) values ('mWoods','$5$rounds=535000$ugNI5VuPtJoWv0gM$1vJFgAvtWKxc.NDv9KwkdbtqT7HzZD7JXRLYrKi779D')")
             # cursor.execute("insert into Login (UserName,Password) values ('jPonting','$5$rounds=535000$WAPcgbS/EIhKeEov$I5C1SEUPNOvWgz9kFc5o.7mtu1XweB2Kj5XReEXfol2')")
             # cursor.execute("insert into Login (UserName,Password) values ('pAdams','$5$rounds=535000$ATnxcfP11e24E4ih$fXn2YdgzykXx9FXbkIXl/1.WRAo6EbnzQ5eKsfYu7A3')")
-            # cursor.execute("insert into Login (UserName,Password) values ('pCooperpass','$5$rounds=535000$yTSVW8g5Nhxat10H$Y5/cH.sFJ8qeW2i7WCNBA60MwPavObhmFkdw0lg5Nt7')")
-            # cursor.execute("insert into Login (UserName,Password) values ('jStockspass','$5$rounds=535000$Xhqgz7DeaOT/sr56$1IO0ir/W9wdVlnXRcCoRjSaHzxkZ0UFALh96jlun6Q9')")
+            # cursor.execute("insert into Login (UserName,Password) values ('pCooper','$5$rounds=535000$yTSVW8g5Nhxat10H$Y5/cH.sFJ8qeW2i7WCNBA60MwPavObhmFkdw0lg5Nt7')")
+            # cursor.execute("insert into Login (UserName,Password) values ('jStocks','$5$rounds=535000$Xhqgz7DeaOT/sr56$1IO0ir/W9wdVlnXRcCoRjSaHzxkZ0UFALh96jlun6Q9')")
            
         self.connection.commit()
 
