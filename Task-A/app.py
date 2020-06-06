@@ -55,7 +55,7 @@ def login():
 @site.route('/graphs', methods=["GET", "POST"])
 def graphs():
     if 'username' in flask.session:
-        return flask.render_template('index.html')
+        return flask.render_template('graphs.html')
     else:
         return flask.redirect(flask.url_for("site.login"))
 
