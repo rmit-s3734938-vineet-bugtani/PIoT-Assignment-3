@@ -3,7 +3,8 @@ Contains all the forms required to obtain data from user.
 """
 
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField
+from wtforms import SelectField, SubmitField, StringField, PasswordField
+from wtforms.validators import DataRequired
 
 class RepairsForm(FlaskForm):
     engineerName = SelectField(
@@ -12,3 +13,8 @@ class RepairsForm(FlaskForm):
         
     )
     submit = SubmitField("Submit")
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Login")
