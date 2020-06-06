@@ -12,6 +12,7 @@ from flask_admin.actions import action
 from forms import RepairsForm
 from datetime import date, time
 from app import site
+from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
 
@@ -413,3 +414,21 @@ def reportFaults():
         db.session.add(newRepair)
     db.session.commit()
     return jsonify({"message": "Success"})
+
+
+# API to login user
+@api.route("/loginUser", methods=["GET", "POST"])
+def checkLogin():
+    """
+    Retrieve login information from database and verify login details based on username and password. 
+
+    Returns:
+        JSON: "message": "Invalid username or password"/"Success"
+    """
+    data = request.get_json(force=True)
+    user = Login.query.filter_by(UserName=data["username"]).first()
+    if user:
+        if sha256_crypt.verify(data["password"], user.Password):
+            userRole = (User.query.filter_by(UserName=data["username"]).first()).Role
+            return jsonify({"message": "Success", "userRole": userRole})
+    return jsonify({"message": "Invalid username or password"})
