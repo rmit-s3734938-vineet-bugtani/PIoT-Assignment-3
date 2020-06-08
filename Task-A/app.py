@@ -63,7 +63,7 @@ def graphs():
 def gmaps():
     if 'username' in flask.session:
         response = requests.get(
-            flask.request.host_url + "/repairsByUsername/" + flask.session['username']
+            flask.request.host_url + "/pendingRepairsByUsername/" + flask.session['username']
         )
         data = json.loads(response.text)
         lats = []

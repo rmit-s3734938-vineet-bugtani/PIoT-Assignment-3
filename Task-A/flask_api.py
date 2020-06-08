@@ -393,7 +393,7 @@ def getEngineerByUsername(username):
     data = json.loads(response.text)
     print(len(data))
     result[0]['Number of repairs assigned'] = len(data)
-    result[0]['Repair history'] = data
+    result[0]['Repair data'] = data
     jsonResult = jsonify(result)
     
     return jsonResult
