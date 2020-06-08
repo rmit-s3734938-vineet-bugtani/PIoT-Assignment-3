@@ -4,7 +4,6 @@ from flask_admin import expose, AdminIndexView, Admin, BaseView
 from flask_admin.contrib.sqla import ModelView
 from app import site
 from database_utils import DatabaseUtils
-from flask_admin import BaseView, expose
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'

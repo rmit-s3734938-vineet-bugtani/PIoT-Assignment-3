@@ -35,6 +35,7 @@ class agentClient:
         for barcode in decode(image):
             username = barcode.data.decode('utf-8')
             return username
+            
     def displayMenu(self):
         print("Engineer Authnetication App")
         print("1. Engineer Bluetooth Scan")
