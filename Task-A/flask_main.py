@@ -20,15 +20,21 @@ db.init_app(app)
 app.register_blueprint(api)
 app.register_blueprint(site)
 
+class LoginView(BaseView):
+    @expose('/')
+    def index(self):
+        return flask.redirect(flask.url_for("site.logout"))
+
 admin = Admin(app)
 '''
 Add admin view using the flask_admin package
 '''
-admin.add_view(ModelView(Car,db.session))
-admin.add_view(ModelView(User,db.session))
-admin.add_view(ModelView(Booking,db.session))
+admin.add_view(CarModelView(Car,db.session,name='View Cars'))
+admin.add_view(UserModelView(User,db.session,name='View Users'))
+admin.add_view(BookingModelView(Booking,db.session,name='View Bookings'))
+admin.add_view(LoginView(name='Logout', endpoint='/logout'))
 
 if __name__ == "__main__":
-    with DatabaseUtils() as db:
-        db.createTables()
+    # with DatabaseUtils() as db:
+    #     db.createTables()
     app.run(host = "0.0.0.0", debug=True)

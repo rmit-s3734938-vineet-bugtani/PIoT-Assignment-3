@@ -7,6 +7,12 @@ from flask_marshmallow import Marshmallow
 from sqlalchemy import extract
 import flask
 import json, requests
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.actions import action
+from forms import RepairsForm
+from datetime import date, time
+from app import site
+from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
 
@@ -43,6 +49,7 @@ class User(db.Model):
     """
     The database schema for the User table.
     """
+    column_list = ('FirstName','LastName','UserName','Email','Role')
     __tablename__ = "User"
     UserID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     FirstName = db.Column(db.Text)
@@ -51,14 +58,16 @@ class User(db.Model):
     Email = db.Column(db.Text)
     Role = db.Column(db.Text)
     credentials = db.Column(db.JSON)
+    DeviceAddress = db.Column(db.Text)
 
-    def __init__(self, FirstName, LastName, UserName, Email, Role, UserID=None):
+    def __init__(self, FirstName, LastName, UserName, Email, Role, DeviceAddress, UserID=None):
         self.UserID = UserID
         self.FirstName = FirstName
         self.LastName = LastName
         self.UserName = UserName
         self.Email = Email
         self.Role = Role
+        self.DeviceAddress = DeviceAddress
 
 
 class Login(db.Model):
@@ -166,7 +175,7 @@ class UserSchema(ma.Schema):
         super().__init__(**kwargs)
 
     class Meta:
-        fields = ("UserID", "FirstName", "LastName", "UserName", "Email", "Role")
+        fields = ("UserID", "FirstName", "LastName", "UserName", "Email", "Role","DeviceAddress")
 
 usersSchema = UserSchema()
 usersSchema = UserSchema(many=True)
@@ -247,6 +256,17 @@ class RepairDetailsSchema(ma.Schema):
             "Seats",
             "CostPerHour",
         )
+class BookingModelView(ModelView):
+    can_create = False
+    column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
+
+class UserModelView(ModelView):
+    column_list = ('FirstName','LastName','UserName','Email','Role')
+
+class CarModelView(ModelView):
+    @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
+    def action_approve(self, ids):
+        return flask.redirect(url_for('site.reportFault', ids = ids))
 
 bookingSchema = BookingSchema()
 bookingSchema = BookingSchema(many=True)
@@ -281,7 +301,6 @@ def getLogins():
     result = loginSchema.dump(logins)
     return jsonify(result)
 
-
 # API to get all cars
 @api.route("/cars", methods=["GET"])
 def getCars():
@@ -294,83 +313,18 @@ def getCars():
     result = carsSchema.dump(cars)
     return jsonify(result)
 
-# API to delete user by username
-@api.route("/removeUser/<username>", methods = ["GET", "POST"])
-def removeUser(username):
+# API to get all Device addresses of all engineers
+@api.route("/deviceAddresses", methods=["GET"])
+def getdeviceAddresses():
     """
-    Remove user from database.
-    Args:
-        username (str): User's login identifier.
-
+    Retrieve device addresses information from database.
     Returns:
-        Need to fill
+        JSON: User information (e.g "DeviceAddress")
     """
-    userToBeDeleted = User.query.filter_by(UserName = username).one()
-    loginToBeDeleted = Login.query.filter_by(UserName = username).one()
-    
-    try:
-        db.session.delete(userToBeDeleted)
-        db.session.delete(loginToBeDeleted)
-        db.session.commit()
-    except:
-        flask.flash('Unable to delete user')
-    
-    return {"message": "Success"}
-
-# API to delete car by carId
-@api.route("/removeCar/<carId>", methods = ["GET", "POST"])
-def removeCar(carId):
-    """
-    Remove car from database.
-    Args:
-        carId (str): Car's unique identifier.
-        
-    Returns:
-        Need to fill
-    """
-    carToBeDeleted = Car.query.filter_by(CarID = carId).one()
-    
-    try:
-        db.session.delete(carToBeDeleted)
-        db.session.commit()
-    except:
-        flask.flash('Unable to delete car')
-    
-    return {"message": "Success"}
-
-# API to get bookings by month
-@api.route("/bookings/<month>", methods=["GET"])
-def getAllBookings(month):
-    """
-    Get all bookings by month from database.
-
-    Returns:
-        JSON: Booking information (e.g 
-        - "BookingID",
-        - "PickUpDate",
-        - "PickUpTime",
-        - "ReturnDate",
-        - "ReturnTime",
-        - "CarID",
-        - "UserName")
-    """
-    bookings = Booking.query.filter(extract('month', Booking.PickUpDate) == month)
-    result = bookingSchema.dump(bookings)
+    users = User.query.add_column("DeviceAddress").filter_by(Role = 'Engineer').all()
+    result = usersSchema.dump(users)
     return jsonify(result)
-
-# API to get repairs by month
-@api.route("/repairsByMonth/<month>", methods=["GET"])
-def getRepairsByMonth(month):
-    """
-    Get all repairs by month from database.
-
-    Returns:
-        JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
-    """
-    repairs = Repairs.query.filter(extract('month', Repairs.AssignedDate) == month)
-    result = repairsSchema.dump(repairs)
-    return jsonify(result)
-
+    
 # API to get pending repairs by engineer's username
 @api.route("/pendingRepairsByUsername/<username>", methods=["GET"])
 def getPendingRepairsByUsername(username):
@@ -423,18 +377,6 @@ def getRepairsByUsername(username):
     result = repairDetailsSchema.dump(repairs)
     return jsonify(result)
 
-# API to get bookings by car type
-@api.route("/bookingsByCarType/<type>", methods=["GET"])
-def getbookingsByCarType(type):
-    """
-    Get all bookings by car type from database.
-
-    """
-    bookings = Booking.query.join(
-    Car, Car.CarID == Booking.CarID).filter(Car.Type == type)
-    result = bookingSchema.dump(bookings)
-    return jsonify(result)
-
 # API to get engineer profile by username
 @api.route("/engineer/<username>", methods=["GET"])
 def getEngineerByUsername(username):
@@ -455,3 +397,45 @@ def getEngineerByUsername(username):
     jsonResult = jsonify(result)
     
     return jsonResult
+
+# API to assign faulty cars
+@api.route("/reportFaults", methods=["GET", "POST"])
+def reportFaults():
+    """
+    Report faulty cars into the database.
+
+    Returns:
+        JSON: "message": "This email is already registered with another account"/"This username is already taken"/"Success"
+    """
+    data = request.get_json(force=True)
+
+    engineerName = data["engineerName"]
+    carIds = data["carIds"]
+    for x in carIds:
+        newRepair = Repairs(
+            CarID=x,
+            UserName=engineerName,
+            AssignedDate=date.today().isoformat(),
+            Status="Pending"
+        )
+        db.session.add(newRepair)
+    db.session.commit()
+    return jsonify({"message": "Success"})
+
+
+# API to login user
+@api.route("/loginUser", methods=["GET", "POST"])
+def checkLogin():
+    """
+    Retrieve login information from database and verify login details based on username and password. 
+
+    Returns:
+        JSON: "message": "Invalid username or password"/"Success"
+    """
+    data = request.get_json(force=True)
+    user = Login.query.filter_by(UserName=data["username"]).first()
+    if user:
+        if sha256_crypt.verify(data["password"], user.Password):
+            userRole = (User.query.filter_by(UserName=data["username"]).first()).Role
+            return jsonify({"message": "Success", "userRole": userRole})
+    return jsonify({"message": "Invalid username or password"})

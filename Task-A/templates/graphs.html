@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container" style="margin-top: 10px;">
+      <div class="row justify-content-center">
+        <div class="col-md">
+          <p style="text-align: center;">
+            Line graph showing bookings made month wise
+          </p>
+          <iframe width="1000" height="1000" src="https://datastudio.google.com/embed/reporting/37dfa34e-ef36-4a82-aac5-6344a44d42a2/page/pGYSB" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div
+          class="col-md"
+        >
+          <p style="text-align: center;margin-top: -500px;position: relative;;">Bar graph showing repairs done month wise </p>
+          <iframe width="1000" height="1000" src="https://datastudio.google.com/embed/reporting/0ae09fa9-002b-4f3e-82fc-540f235d2b22/page/2fWSB" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="row justify-content-center" style="position: absolute;">
+        <div
+          class="col-md"
+        >
+          <p style="text-align: center;margin-top: -500px;margin-left: 200px;">Pie graph showing car types booked by users</p>
+          <iframe width="1000" height="1000" src="https://datastudio.google.com/embed/reporting/7bb92af8-b24c-494e-ac4e-2fd530ec8ed5/page/bEETB" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
