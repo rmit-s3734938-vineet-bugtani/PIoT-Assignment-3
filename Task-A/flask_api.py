@@ -334,6 +334,10 @@ def getPendingRepairsByUsername(username):
     Returns:
         JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName")
     """
+    user = User.query.filter(User.UserName == username )
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid username"}), 404
     repairs = Car.query.join(
     Repairs, Car.CarID == Repairs.CarID).add_columns(
             Repairs.RepairID,
@@ -349,7 +353,7 @@ def getPendingRepairsByUsername(username):
             Car.CostPerHour,
         ).filter(Repairs.UserName == username, Repairs.Status == 'Pending')
     result = repairDetailsSchema.dump(repairs)
-    return jsonify(result)
+    return jsonify(result), 200
 
 # API to get all repairs by engineer's username
 @api.route("/repairsByUsername/<username>", methods=["GET"])
@@ -360,6 +364,10 @@ def getRepairsByUsername(username):
     Returns:
         JSON: Repairs information ("RepairID", "AssignedDate", "Status", "CarID", "UserName","Make","Type","Color","Seats","Location","CostPerHour")
     """
+    user = User.query.filter(User.UserName == username )
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid engineer username"}), 404
     repairs = Car.query.join(
     Repairs, Car.CarID == Repairs.CarID).add_columns(
             Repairs.RepairID,
@@ -375,7 +383,7 @@ def getRepairsByUsername(username):
             Car.CostPerHour,
         ).filter(Repairs.UserName == username)
     result = repairDetailsSchema.dump(repairs)
-    return jsonify(result)
+    return jsonify(result), 200
 
 # API to get engineer profile by username
 @api.route("/engineer/<username>", methods=["GET"])
@@ -385,18 +393,18 @@ def getEngineerByUsername(username):
     Returns:
         JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
     """
-    users = User.query.filter(User.UserName == username )
-    result = usersSchema.dump(users)
+    user = User.query.filter(User.UserName == username )
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid username"}), 404
     response = requests.get(
         flask.request.host_url + "/repairsByUsername/" + username
     )
     data = json.loads(response.text)
-    print(len(data))
     result[0]['Number of repairs assigned'] = len(data)
     result[0]['Repair data'] = data
     jsonResult = jsonify(result)
-    
-    return jsonResult
+    return jsonResult, 200
 
 # API to assign faulty cars
 @api.route("/reportFaults", methods=["GET", "POST"])
@@ -408,9 +416,23 @@ def reportFaults():
         JSON: "message": "This email is already registered with another account"/"This username is already taken"/"Success"
     """
     data = request.get_json(force=True)
-
+    if 'engineerName' not in data:
+        return jsonify({"message": "Engineer username not supplied"}), 400
+    if 'carIds' not in data:
+        return jsonify({"message": "No car ids supplied"}), 400
     engineerName = data["engineerName"]
+    user = User.query.filter(User.UserName == engineerName )
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid engineer username"}), 404
+    
     carIds = data["carIds"]
+    for x in carIds:
+        car = Car.query.filter(Car.CarID == x )
+        result = carsSchema.dump(car)
+        if(len(result) == 0):
+            return jsonify({"message": "Invalid car id"}), 404
+    
     for x in carIds:
         newRepair = Repairs(
             CarID=x,
@@ -433,9 +455,13 @@ def checkLogin():
         JSON: "message": "Invalid username or password"/"Success"
     """
     data = request.get_json(force=True)
+    if 'username' not in data:
+        return jsonify({"message": "Username not supplied"}), 400
+    if 'password' not in data:
+        return jsonify({"message": "Password not supplied"}), 400
     user = Login.query.filter_by(UserName=data["username"]).first()
     if user:
         if sha256_crypt.verify(data["password"], user.Password):
             userRole = (User.query.filter_by(UserName=data["username"]).first()).Role
             return jsonify({"message": "Success", "userRole": userRole})
-    return jsonify({"message": "Invalid username or password"})
+    return jsonify({"message": "Invalid username or password"}), 404
