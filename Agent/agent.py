@@ -40,7 +40,7 @@ class agentClient:
         print("1. Engineer Bluetooth Scan")
         print("2. QR Code Profile Scan")
         print("3. Exit")
-        option = input("Select an option")
+        option = input("Select an option: ")
 
         if option =='1':
             device_address = None
