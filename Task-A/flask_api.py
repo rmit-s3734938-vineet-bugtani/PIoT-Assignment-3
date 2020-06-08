@@ -58,14 +58,16 @@ class User(db.Model):
     Email = db.Column(db.Text)
     Role = db.Column(db.Text)
     credentials = db.Column(db.JSON)
+    DeviceAddress = db.Column(db.Text)
 
-    def __init__(self, FirstName, LastName, UserName, Email, Role, UserID=None):
+    def __init__(self, FirstName, LastName, UserName, Email, Role, DeviceAddress, UserID=None):
         self.UserID = UserID
         self.FirstName = FirstName
         self.LastName = LastName
         self.UserName = UserName
         self.Email = Email
         self.Role = Role
+        self.DeviceAddress = DeviceAddress
 
 
 class Login(db.Model):
@@ -173,7 +175,7 @@ class UserSchema(ma.Schema):
         super().__init__(**kwargs)
 
     class Meta:
-        fields = ("UserID", "FirstName", "LastName", "UserName", "Email", "Role")
+        fields = ("UserID", "FirstName", "LastName", "UserName", "Email", "Role","DeviceAddress")
 
 usersSchema = UserSchema()
 usersSchema = UserSchema(many=True)
@@ -332,6 +334,17 @@ def removeCar(carId):
     
     return {"message": "Success"}
 
+# API to get all Device addresses of all engineers
+@api.route("/deviceAddresses", methods=["GET"])
+def getdeviceAddresses():
+    """
+    Retrieve device addresses information from database.
+    Returns:
+        JSON: User information (e.g "DeviceAddress")
+    """
+    users = User.query.add_column("DeviceAddress").filter_by(Role = 'Engineer').all()
+    result = usersSchema.dump(users)
+    return jsonify(result)
 # API to get bookings by month
 @api.route("/bookings/<month>", methods=["GET"])
 def getAllBookings(month):
