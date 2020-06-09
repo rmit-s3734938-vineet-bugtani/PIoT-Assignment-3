@@ -11,7 +11,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.actions import action
 from forms import RepairsForm
 from datetime import date, time
-from app import site
+from app import site, sendNotification
 from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
@@ -441,6 +441,7 @@ def reportFaults():
             Status="Pending"
         )
         db.session.add(newRepair)
+        sendNotification("Vehicle reported for repair", "Vehicle {v} was reported for repair to {e}".format(v=x, e=engineerName))
     db.session.commit()
     return jsonify({"message": "Success"})
 

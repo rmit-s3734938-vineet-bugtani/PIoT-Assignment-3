@@ -97,5 +97,20 @@ def reportFault():
         return flask.redirect(flask.url_for("site.login"))
 
 
-
-
+def sendNotification(title, body):
+    """ Sending notification via pushbullet.
+        Args:
+            title (str) : title of text.
+            body (str) : Body of text.
+    """
+    # TODO Personal api token. Remove api token before making repo public.
+    ACCESS_TOKEN="o.nTPc8SLF2J2nCkfIJQu4ZLCitYpcN2Fc"
+    data_send = {"type": "note", "title": title, "body": body}
+ 
+    resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data_send),
+                         headers={'Authorization': 'Bearer ' + ACCESS_TOKEN, 
+                         'Content-Type': 'application/json'})
+    if resp.status_code != 200:
+        print('Something went wrong while sending Pushbullet notification.')
+    else:
+        print('Pushbullet notification sent.')
