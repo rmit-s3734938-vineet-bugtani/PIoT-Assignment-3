@@ -264,6 +264,8 @@ class UserModelView(ModelView):
     column_list = ('FirstName','LastName','UserName','Email','Role')
 
 class CarModelView(ModelView):
+    column_searchable_list = ["Make", "Type", "Color", "Seats"]
+
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
     def action_approve(self, ids):
         return flask.redirect(url_for('site.reportFault', ids = ids))
