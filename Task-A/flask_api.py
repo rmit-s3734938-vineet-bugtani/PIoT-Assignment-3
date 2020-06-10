@@ -11,7 +11,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.actions import action
 from forms import RepairsForm
 from datetime import date, time
-from app import site
+from app import site, sendNotification
 from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
@@ -264,6 +264,8 @@ class UserModelView(ModelView):
     column_list = ('FirstName','LastName','UserName','Email','Role')
 
 class CarModelView(ModelView):
+    column_searchable_list = ["Make", "Type", "Color", "Seats"]
+
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
     def action_approve(self, ids):
         return flask.redirect(url_for('site.reportFault', ids = ids))
@@ -441,6 +443,7 @@ def reportFaults():
             Status="Pending"
         )
         db.session.add(newRepair)
+        sendNotification("Vehicle reported for repair", "Vehicle {v} was reported for repair to {e}".format(v=x, e=engineerName))
     db.session.commit()
     return jsonify({"message": "Success"})
 
