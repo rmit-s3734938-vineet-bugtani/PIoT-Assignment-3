@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, render_template
-import gevent
-from gevent import monkey
-monkey.patch_all(subprocess=True)
+import eventlet
+eventlet.monkey_patch()
+# from gevent import monkey
+# monkey.patch_all(subprocess=True)
 from flask_api import *
 from flask_admin import expose, AdminIndexView, Admin, BaseView
 from flask_admin.contrib.sqla import ModelView
@@ -43,5 +44,5 @@ admin.add_view(LoginView(name='Logout', endpoint='/logout'))
 if __name__ == "__main__":
     # with DatabaseUtils() as db:
     #     db.createTables()
-    #app.run(host = "0.0.0.0", debug=True)
+    #app.run(host = "192.168.1.225", debug=True)
     sios.run(app, host = "192.168.1.225", debug=True)

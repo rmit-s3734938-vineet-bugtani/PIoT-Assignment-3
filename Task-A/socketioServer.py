@@ -13,7 +13,13 @@ def handle_reset():
 # Get mac address list event
 @sios.on('maclist')
 def get_maclist():
-    return
+    response = requests.get(request.host_url + "/deviceAddresses")
+    jlist = json.loads(response.text)
+    maclist = []
+    for item in jlist:
+        if item['DeviceAddress'] != 'None':
+            maclist.append(item['DeviceAddress'])
+    return maclist
 
 # Get engineer profile event
 @sios.on('profile')
