@@ -17,5 +17,5 @@ def get_maclist():
 
 # Get engineer profile event
 @sios.on('profile')
-def get_profile(message);
+def get_profile(message):
     return
