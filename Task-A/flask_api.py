@@ -257,13 +257,22 @@ class RepairDetailsSchema(ma.Schema):
             "CostPerHour",
         )
 class BookingModelView(ModelView):
+    """
+    Part of flask_admin API that display, create and add Bookings into the database. 
+    """
     can_create = False
     column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
 
 class UserModelView(ModelView):
+    """
+    Part of flask_admin API that display, create and add Users into the database. 
+    """
     column_list = ('FirstName','LastName','UserName','Email','Role')
 
 class CarModelView(ModelView):
+    """
+    Part of flask_admin API that display, create and add Cars into the database. 
+    """
     column_searchable_list = ["Make", "Type", "Color", "Seats"]
 
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 

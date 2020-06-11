@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flask_api &#8212; Car Rental Website  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for flask_api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Contains the database schema to allow mapping to the database table.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span><span class="n">redirect</span><span class="p">,</span><span class="n">url_for</span>
+<span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
+<span class="kn">from</span> <span class="nn">flask_marshmallow</span> <span class="kn">import</span> <span class="n">Marshmallow</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">extract</span>
+<span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">flask_admin.contrib.sqla</span> <span class="kn">import</span> <span class="n">ModelView</span>
+<span class="kn">from</span> <span class="nn">flask_admin.actions</span> <span class="kn">import</span> <span class="n">action</span>
+<span class="kn">from</span> <span class="nn">forms</span> <span class="kn">import</span> <span class="n">RepairsForm</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">site</span><span class="p">,</span> <span class="n">sendNotification</span>
+<span class="kn">from</span> <span class="nn">passlib.hash</span> <span class="kn">import</span> <span class="n">sha256_crypt</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">&quot;api&quot;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">()</span>
+<span class="n">ma</span> <span class="o">=</span> <span class="n">Marshmallow</span><span class="p">()</span>
+
+<span class="c1"># Declaring the model.</span>
+<div class="viewcode-block" id="Car"><a class="viewcode-back" href="../flask_api.html#flask_api.Car">[docs]</a><span class="k">class</span> <span class="nc">Car</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The database schema for the Car table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;Car&quot;</span>
+    <span class="n">CarID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">Make</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Type</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Location</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Color</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Seats</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">CostPerHour</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Make</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span> <span class="n">Color</span><span class="p">,</span> <span class="n">Seats</span><span class="p">,</span><span class="n">Status</span><span class="p">,</span> <span class="n">CostPerHour</span><span class="p">,</span> <span class="n">CarID</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CarID</span> <span class="o">=</span> <span class="n">CarID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Make</span> <span class="o">=</span> <span class="n">Make</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">Type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Location</span> <span class="o">=</span> <span class="n">Location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Color</span> <span class="o">=</span> <span class="n">Color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Seats</span> <span class="o">=</span> <span class="n">Seats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CostPerHour</span> <span class="o">=</span> <span class="n">CostPerHour</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Status</span> <span class="o">=</span> <span class="n">Status</span></div>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../flask_api.html#flask_api.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The database schema for the User table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">column_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">,</span><span class="s1">&#39;LastName&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">,</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span><span class="s1">&#39;Role&#39;</span><span class="p">)</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;User&quot;</span>
+    <span class="n">UserID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">FirstName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">LastName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">UserName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Email</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Role</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+    <span class="n">DeviceAddress</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FirstName</span><span class="p">,</span> <span class="n">LastName</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">DeviceAddress</span><span class="p">,</span> <span class="n">UserID</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UserID</span> <span class="o">=</span> <span class="n">UserID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FirstName</span> <span class="o">=</span> <span class="n">FirstName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LastName</span> <span class="o">=</span> <span class="n">LastName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UserName</span> <span class="o">=</span> <span class="n">UserName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Email</span> <span class="o">=</span> <span class="n">Email</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Role</span> <span class="o">=</span> <span class="n">Role</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DeviceAddress</span> <span class="o">=</span> <span class="n">DeviceAddress</span></div>
+
+
+<div class="viewcode-block" id="Login"><a class="viewcode-back" href="../flask_api.html#flask_api.Login">[docs]</a><span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The database schema for the Login table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;Login&quot;</span>
+    <span class="n">LoginID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">UserName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Password</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Password</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">LoginID</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LoginID</span> <span class="o">=</span> <span class="n">LoginID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UserName</span> <span class="o">=</span> <span class="n">UserName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Password</span> <span class="o">=</span> <span class="n">Password</span></div>
+
+<div class="viewcode-block" id="Booking"><a class="viewcode-back" href="../flask_api.html#flask_api.Booking">[docs]</a><span class="k">class</span> <span class="nc">Booking</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The database schema for the Booking table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;Booking&quot;</span>
+    <span class="n">BookingID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">PickUpDate</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span>
+    <span class="n">PickUpTime</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span>
+    <span class="n">ReturnDate</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span>
+    <span class="n">ReturnTime</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span>
+    <span class="n">CarID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">UserName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">eventId</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">PickUpDate</span><span class="p">,</span>
+        <span class="n">PickUpTime</span><span class="p">,</span>
+        <span class="n">ReturnDate</span><span class="p">,</span>
+        <span class="n">ReturnTime</span><span class="p">,</span>
+        <span class="n">CarID</span><span class="p">,</span>
+        <span class="n">UserName</span><span class="p">,</span>
+        <span class="n">BookingID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BookingID</span> <span class="o">=</span> <span class="n">BookingID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PickUpDate</span> <span class="o">=</span> <span class="n">PickUpDate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PickUpTime</span> <span class="o">=</span> <span class="n">PickUpTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ReturnDate</span> <span class="o">=</span> <span class="n">ReturnDate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ReturnTime</span> <span class="o">=</span> <span class="n">ReturnTime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CarID</span> <span class="o">=</span> <span class="n">CarID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UserName</span> <span class="o">=</span> <span class="n">UserName</span></div>
+
+<div class="viewcode-block" id="Repairs"><a class="viewcode-back" href="../flask_api.html#flask_api.Repairs">[docs]</a><span class="k">class</span> <span class="nc">Repairs</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The database schema for the Repairs table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;Repairs&quot;</span>
+    <span class="n">RepairID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoincrement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">AssignedDate</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span>
+    <span class="n">CarID</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">UserName</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">Status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">AssignedDate</span><span class="p">,</span>
+        <span class="n">CarID</span><span class="p">,</span>
+        <span class="n">UserName</span><span class="p">,</span>
+        <span class="n">Status</span><span class="p">,</span>
+        <span class="n">RepairID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RepairID</span> <span class="o">=</span> <span class="n">RepairID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AssignedDate</span> <span class="o">=</span> <span class="n">AssignedDate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Status</span> <span class="o">=</span> <span class="n">Status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CarID</span> <span class="o">=</span> <span class="n">CarID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UserName</span> <span class="o">=</span> <span class="n">UserName</span></div>
+
+<div class="viewcode-block" id="RepairsSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.RepairsSchema">[docs]</a><span class="k">class</span> <span class="nc">RepairsSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Repairs schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RepairsSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.RepairsSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;RepairID&quot;</span><span class="p">,</span> <span class="s2">&quot;AssignedDate&quot;</span><span class="p">,</span> <span class="s2">&quot;Status&quot;</span><span class="p">,</span> <span class="s2">&quot;CarID&quot;</span><span class="p">,</span> <span class="s2">&quot;UserName&quot;</span><span class="p">)</span></div></div>
+
+<span class="n">repairsSchema</span> <span class="o">=</span> <span class="n">RepairsSchema</span><span class="p">()</span>
+<span class="n">repairsSchema</span> <span class="o">=</span> <span class="n">RepairsSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CarSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.CarSchema">[docs]</a><span class="k">class</span> <span class="nc">CarSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Car schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CarSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.CarSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;CarID&quot;</span><span class="p">,</span> <span class="s2">&quot;Make&quot;</span><span class="p">,</span> <span class="s2">&quot;Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">,</span> <span class="s2">&quot;Seats&quot;</span><span class="p">,</span> <span class="s2">&quot;CostPerHour&quot;</span><span class="p">,</span><span class="s2">&quot;Status&quot;</span><span class="p">)</span></div></div>
+
+<span class="n">carsSchema</span> <span class="o">=</span> <span class="n">CarSchema</span><span class="p">()</span>
+<span class="n">carsSchema</span> <span class="o">=</span> <span class="n">CarSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UserSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.UserSchema">[docs]</a><span class="k">class</span> <span class="nc">UserSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format User schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UserSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.UserSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UserID&quot;</span><span class="p">,</span> <span class="s2">&quot;FirstName&quot;</span><span class="p">,</span> <span class="s2">&quot;LastName&quot;</span><span class="p">,</span> <span class="s2">&quot;UserName&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span> <span class="s2">&quot;Role&quot;</span><span class="p">,</span><span class="s2">&quot;DeviceAddress&quot;</span><span class="p">)</span></div></div>
+
+<span class="n">usersSchema</span> <span class="o">=</span> <span class="n">UserSchema</span><span class="p">()</span>
+<span class="n">usersSchema</span> <span class="o">=</span> <span class="n">UserSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LoginSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.LoginSchema">[docs]</a><span class="k">class</span> <span class="nc">LoginSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Login schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LoginSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.LoginSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;LoginID&quot;</span><span class="p">,</span> <span class="s2">&quot;UserName&quot;</span><span class="p">,</span> <span class="s2">&quot;Password&quot;</span><span class="p">)</span></div></div>
+
+<span class="n">loginSchema</span> <span class="o">=</span> <span class="n">LoginSchema</span><span class="p">()</span>
+<span class="n">loginSchema</span> <span class="o">=</span> <span class="n">LoginSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BookingSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.BookingSchema">[docs]</a><span class="k">class</span> <span class="nc">BookingSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Booking schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BookingSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.BookingSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;BookingID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PickUpDate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PickUpTime&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ReturnDate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ReturnTime&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CarID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;UserName&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="BookingDetailsSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.BookingDetailsSchema">[docs]</a><span class="k">class</span> <span class="nc">BookingDetailsSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Booking Detail schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BookingDetailsSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.BookingDetailsSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;BookingID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PickUpDate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PickUpTime&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ReturnDate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ReturnTime&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;UserName&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CarID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Make&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Color&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Seats&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CostPerHour&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="RepairDetailsSchema"><a class="viewcode-back" href="../flask_api.html#flask_api.RepairDetailsSchema">[docs]</a><span class="k">class</span> <span class="nc">RepairDetailsSchema</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">Schema</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format Repair Detail schema output with marshmallow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RepairDetailsSchema.Meta"><a class="viewcode-back" href="../flask_api.html#flask_api.RepairDetailsSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;RepairID&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;AssignedDate&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Status&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;UserName&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CarID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Make&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Color&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Seats&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CostPerHour&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+<div class="viewcode-block" id="BookingModelView"><a class="viewcode-back" href="../flask_api.html#flask_api.BookingModelView">[docs]</a><span class="k">class</span> <span class="nc">BookingModelView</span><span class="p">(</span><span class="n">ModelView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Part of flask_admin API that display, create and add Bookings into the database. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">can_create</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">column_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;PickUpDate&#39;</span><span class="p">,</span><span class="s1">&#39;PickUpTime&#39;</span><span class="p">,</span><span class="s1">&#39;ReturnDate&#39;</span><span class="p">,</span><span class="s1">&#39;ReturnTime&#39;</span><span class="p">,</span><span class="s1">&#39;CarID&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserModelView"><a class="viewcode-back" href="../flask_api.html#flask_api.UserModelView">[docs]</a><span class="k">class</span> <span class="nc">UserModelView</span><span class="p">(</span><span class="n">ModelView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Part of flask_admin API that display, create and add Users into the database. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">column_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">,</span><span class="s1">&#39;LastName&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">,</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span><span class="s1">&#39;Role&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CarModelView"><a class="viewcode-back" href="../flask_api.html#flask_api.CarModelView">[docs]</a><span class="k">class</span> <span class="nc">CarModelView</span><span class="p">(</span><span class="n">ModelView</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Part of flask_admin API that display, create and add Cars into the database. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">column_searchable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Make&quot;</span><span class="p">,</span> <span class="s2">&quot;Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">,</span> <span class="s2">&quot;Seats&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="CarModelView.action_approve"><a class="viewcode-back" href="../flask_api.html#flask_api.CarModelView.action_approve">[docs]</a>    <span class="nd">@action</span><span class="p">(</span><span class="s1">&#39;approve&#39;</span><span class="p">,</span> <span class="s1">&#39;Report&#39;</span><span class="p">,</span> <span class="s1">&#39;Are you sure you want to report faults in selected cars?&#39;</span><span class="p">)</span> 
+    <span class="k">def</span> <span class="nf">action_approve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;site.reportFault&#39;</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="n">ids</span><span class="p">))</span></div></div>
+
+<span class="n">bookingSchema</span> <span class="o">=</span> <span class="n">BookingSchema</span><span class="p">()</span>
+<span class="n">bookingSchema</span> <span class="o">=</span> <span class="n">BookingSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">bookingDetailsSchema</span> <span class="o">=</span> <span class="n">BookingDetailsSchema</span><span class="p">()</span>
+<span class="n">bookingDetailsSchema</span> <span class="o">=</span> <span class="n">BookingDetailsSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">repairDetailsSchema</span> <span class="o">=</span> <span class="n">RepairDetailsSchema</span><span class="p">()</span>
+<span class="n">repairDetailsSchema</span> <span class="o">=</span> <span class="n">RepairDetailsSchema</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># API to get all users</span>
+<div class="viewcode-block" id="getUsers"><a class="viewcode-back" href="../flask_api.html#flask_api.getUsers">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getUsers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve users&#39; information from database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: User information (e.g &quot;UserID&quot;, &quot;FirstName&quot;, &quot;LastName&quot;, &quot;UserName&quot;, &quot;Email&quot;, &quot;Role&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<span class="c1"># API to get all logins</span>
+<div class="viewcode-block" id="getLogins"><a class="viewcode-back" href="../flask_api.html#flask_api.getLogins">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/logins&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getLogins</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve logins&#39; information from database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: User information (&quot;LoginID&quot;, &quot;UserName&quot;, &quot;Password&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logins</span> <span class="o">=</span> <span class="n">Login</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">loginSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">logins</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<span class="c1"># API to get all cars</span>
+<div class="viewcode-block" id="getCars"><a class="viewcode-back" href="../flask_api.html#flask_api.getCars">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/cars&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getCars</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve cars information from database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: Car information (&quot;CarID&quot;, &quot;Make&quot;, &quot;Type&quot;, &quot;Location&quot;, &quot;Color&quot;, &quot;Seats&quot;, &quot;CostPerHour&quot;,&quot;Status&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cars</span> <span class="o">=</span> <span class="n">Car</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">carsSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<span class="c1"># API to get all Device addresses of all engineers</span>
+<div class="viewcode-block" id="getdeviceAddresses"><a class="viewcode-back" href="../flask_api.html#flask_api.getdeviceAddresses">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/deviceAddresses&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getdeviceAddresses</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve device addresses information from database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: User information (e.g &quot;DeviceAddress&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;DeviceAddress&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">Role</span> <span class="o">=</span> <span class="s1">&#39;Engineer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+    
+<span class="c1"># API to get pending repairs by engineer&#39;s username</span>
+<div class="viewcode-block" id="getPendingRepairsByUsername"><a class="viewcode-back" href="../flask_api.html#flask_api.getPendingRepairsByUsername">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/pendingRepairsByUsername/&lt;username&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getPendingRepairsByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all pending repairs by username from database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: Repairs information (&quot;RepairID&quot;, &quot;AssignedDate&quot;, &quot;Status&quot;, &quot;CarID&quot;, &quot;UserName&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">username</span> <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    <span class="n">repairs</span> <span class="o">=</span> <span class="n">Car</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">Repairs</span><span class="p">,</span> <span class="n">Car</span><span class="o">.</span><span class="n">CarID</span> <span class="o">==</span> <span class="n">Repairs</span><span class="o">.</span><span class="n">CarID</span><span class="p">)</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">RepairID</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">AssignedDate</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">Status</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">CarID</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">CarID</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Make</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Color</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Seats</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">CostPerHour</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Repairs</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">username</span><span class="p">,</span> <span class="n">Repairs</span><span class="o">.</span><span class="n">Status</span> <span class="o">==</span> <span class="s1">&#39;Pending&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">repairDetailsSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">repairs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="mi">200</span></div>
+
+<span class="c1"># API to get all repairs by engineer&#39;s username</span>
+<div class="viewcode-block" id="getRepairsByUsername"><a class="viewcode-back" href="../flask_api.html#flask_api.getRepairsByUsername">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/repairsByUsername/&lt;username&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getRepairsByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all repairs by username from database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: Repairs information (&quot;RepairID&quot;, &quot;AssignedDate&quot;, &quot;Status&quot;, &quot;CarID&quot;, &quot;UserName&quot;,&quot;Make&quot;,&quot;Type&quot;,&quot;Color&quot;,&quot;Seats&quot;,&quot;Location&quot;,&quot;CostPerHour&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">username</span> <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid engineer username&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    <span class="n">repairs</span> <span class="o">=</span> <span class="n">Car</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">Repairs</span><span class="p">,</span> <span class="n">Car</span><span class="o">.</span><span class="n">CarID</span> <span class="o">==</span> <span class="n">Repairs</span><span class="o">.</span><span class="n">CarID</span><span class="p">)</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">RepairID</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">AssignedDate</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">Status</span><span class="p">,</span>
+            <span class="n">Repairs</span><span class="o">.</span><span class="n">CarID</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">CarID</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Make</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Color</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">Seats</span><span class="p">,</span>
+            <span class="n">Car</span><span class="o">.</span><span class="n">CostPerHour</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Repairs</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">username</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">repairDetailsSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">repairs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="mi">200</span></div>
+
+<span class="c1"># API to get engineer profile by username</span>
+<div class="viewcode-block" id="getEngineerByUsername"><a class="viewcode-back" href="../flask_api.html#flask_api.getEngineerByUsername">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/engineer/&lt;username&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getEngineerByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve engineer&#39; information from database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: User information (e.g &quot;UserID&quot;, &quot;FirstName&quot;, &quot;LastName&quot;, &quot;UserName&quot;, &quot;Email&quot;, &quot;Role&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">username</span> <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">host_url</span> <span class="o">+</span> <span class="s2">&quot;/repairsByUsername/&quot;</span> <span class="o">+</span> <span class="n">username</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Number of repairs assigned&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Repair data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">jsonResult</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonResult</span><span class="p">,</span> <span class="mi">200</span></div>
+
+<span class="c1"># API to assign faulty cars</span>
+<div class="viewcode-block" id="reportFaults"><a class="viewcode-back" href="../flask_api.html#flask_api.reportFaults">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/reportFaults&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">reportFaults</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Report faulty cars into the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: &quot;message&quot;: &quot;This email is already registered with another account&quot;/&quot;This username is already taken&quot;/&quot;Success&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;engineerName&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Engineer username not supplied&quot;</span><span class="p">}),</span> <span class="mi">400</span>
+    <span class="k">if</span> <span class="s1">&#39;carIds&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No car ids supplied&quot;</span><span class="p">}),</span> <span class="mi">400</span>
+    <span class="n">engineerName</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;engineerName&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">UserName</span> <span class="o">==</span> <span class="n">engineerName</span> <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid engineer username&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    
+    <span class="n">carIds</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;carIds&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">carIds</span><span class="p">:</span>
+        <span class="n">car</span> <span class="o">=</span> <span class="n">Car</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Car</span><span class="o">.</span><span class="n">CarID</span> <span class="o">==</span> <span class="n">x</span> <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">carsSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid car id&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">carIds</span><span class="p">:</span>
+        <span class="n">newRepair</span> <span class="o">=</span> <span class="n">Repairs</span><span class="p">(</span>
+            <span class="n">CarID</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">UserName</span><span class="o">=</span><span class="n">engineerName</span><span class="p">,</span>
+            <span class="n">AssignedDate</span><span class="o">=</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="n">Status</span><span class="o">=</span><span class="s2">&quot;Pending&quot;</span>
+        <span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">newRepair</span><span class="p">)</span>
+        <span class="n">sendNotification</span><span class="p">(</span><span class="s2">&quot;Vehicle reported for repair&quot;</span><span class="p">,</span> <span class="s2">&quot;Vehicle </span><span class="si">{v}</span><span class="s2"> was reported for repair to </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">engineerName</span><span class="p">))</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">})</span></div>
+
+
+<span class="c1"># API to login user</span>
+<div class="viewcode-block" id="checkLogin"><a class="viewcode-back" href="../flask_api.html#flask_api.checkLogin">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/loginUser&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">checkLogin</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve login information from database and verify login details based on username and password. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        JSON: &quot;message&quot;: &quot;Invalid username or password&quot;/&quot;Success&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;username&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Username not supplied&quot;</span><span class="p">}),</span> <span class="mi">400</span>
+    <span class="k">if</span> <span class="s1">&#39;password&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Password not supplied&quot;</span><span class="p">}),</span> <span class="mi">400</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">Login</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sha256_crypt</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">],</span> <span class="n">user</span><span class="o">.</span><span class="n">Password</span><span class="p">):</span>
+            <span class="n">userRole</span> <span class="o">=</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">first</span><span class="p">())</span><span class="o">.</span><span class="n">Role</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span> <span class="s2">&quot;userRole&quot;</span><span class="p">:</span> <span class="n">userRole</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid username or password&quot;</span><span class="p">}),</span> <span class="mi">404</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Car Rental Website</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Task-A</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

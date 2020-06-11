@@ -21,14 +21,14 @@ app.register_blueprint(api)
 app.register_blueprint(site)
 
 class LoginView(BaseView):
+    """
+    Add admin view using the flask_admin package
+    """
     @expose('/')
     def index(self):
         return flask.redirect(flask.url_for("site.logout"))
 
 admin = Admin(app)
-'''
-Add admin view using the flask_admin package
-'''
 admin.add_view(CarModelView(Car,db.session,name='View Cars'))
 admin.add_view(UserModelView(User,db.session,name='View Users'))
 admin.add_view(BookingModelView(Booking,db.session,name='View Bookings'))

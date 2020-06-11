@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flask api module &#8212; Car Rental Website  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="flask_main module" href="flask_main.html" />
+    <link rel="prev" title="database_utils module" href="database_utils.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-flask_api">
+<span id="flask-api-module"></span><h1>flask api module<a class="headerlink" href="#module-flask_api" title="Permalink to this headline">¶</a></h1>
+<p>Contains the database schema to allow mapping to the database table.</p>
+<dl class="py class">
+<dt id="flask_api.Booking">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">Booking</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">PickUpDate</span></em>, <em class="sig-param"><span class="n">PickUpTime</span></em>, <em class="sig-param"><span class="n">ReturnDate</span></em>, <em class="sig-param"><span class="n">ReturnTime</span></em>, <em class="sig-param"><span class="n">CarID</span></em>, <em class="sig-param"><span class="n">UserName</span></em>, <em class="sig-param"><span class="n">BookingID</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#Booking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.Booking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>The database schema for the Booking table.</p>
+</dd></dl>
+<br>
+<dl class="py class">
+<dt id="flask_api.BookingDetailsSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">BookingDetailsSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#BookingDetailsSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.BookingDetailsSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Booking Detail schema output with marshmallow.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.BookingModelView">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">BookingModelView</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">static_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_class_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#BookingModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.BookingModelView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_admin.contrib.sqla.view.ModelView</span></code></p>
+<p>Part of flask_admin API that display, create and add Bookings into the database.</p>
+<br>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.BookingSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">BookingSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#BookingSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.BookingSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Booking schema output with marshmallow.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.Car">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">Car</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Make</span></em>, <em class="sig-param"><span class="n">Type</span></em>, <em class="sig-param"><span class="n">Location</span></em>, <em class="sig-param"><span class="n">Color</span></em>, <em class="sig-param"><span class="n">Seats</span></em>, <em class="sig-param"><span class="n">Status</span></em>, <em class="sig-param"><span class="n">CostPerHour</span></em>, <em class="sig-param"><span class="n">CarID</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#Car"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.Car" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>The database schema for the Car table.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.CarModelView">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">CarModelView</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">static_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_class_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#CarModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.CarModelView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_admin.contrib.sqla.view.ModelView</span></code></p>
+<p>Part of flask_admin API that display, create and add Cars into the database.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.CarSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">CarSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#CarSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.CarSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Car schema output with marshmallow.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.Login">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">Login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Password</span></em>, <em class="sig-param"><span class="n">UserName</span></em>, <em class="sig-param"><span class="n">LoginID</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#Login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.Login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>The database schema for the Login table.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.LoginSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">LoginSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#LoginSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.LoginSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Login schema output with marshmallow.</p>
+<br>
+</dd></dl>
+
+
+<dl class="py class">
+<dt id="flask_api.RepairDetailsSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">RepairDetailsSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#RepairDetailsSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.RepairDetailsSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Repair Detail schema output with marshmallow.</p>
+<br>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.Repairs">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">Repairs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">AssignedDate</span></em>, <em class="sig-param"><span class="n">CarID</span></em>, <em class="sig-param"><span class="n">UserName</span></em>, <em class="sig-param"><span class="n">Status</span></em>, <em class="sig-param"><span class="n">RepairID</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#Repairs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.Repairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>The database schema for the Repairs table.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.RepairsSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">RepairsSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#RepairsSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.RepairsSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format Repairs schema output with marshmallow.</p>
+<br>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.User">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">User</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">FirstName</span></em>, <em class="sig-param"><span class="n">LastName</span></em>, <em class="sig-param"><span class="n">UserName</span></em>, <em class="sig-param"><span class="n">Email</span></em>, <em class="sig-param"><span class="n">Role</span></em>, <em class="sig-param"><span class="n">DeviceAddress</span></em>, <em class="sig-param"><span class="n">UserID</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>The database schema for the User table.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.UserModelView">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">UserModelView</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">category</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">static_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_class_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">menu_icon_value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#UserModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.UserModelView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_admin.contrib.sqla.view.ModelView</span></code></p>
+<p>Part of flask_admin API that display, create and add Users into the database.</p>
+<br>
+</dd></dl>
+
+<dl class="py class">
+<dt id="flask_api.UserSchema">
+<em class="property">class </em><code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">UserSchema</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#UserSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.UserSchema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_marshmallow.schema.Schema</span></code></p>
+<p>Format User schema output with marshmallow.</p>
+<br>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.checkLogin">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">checkLogin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#checkLogin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.checkLogin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve login information from database and verify login details based on username and password.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>JSON: “message”: “Invalid username or password”/”Success”</p>
+</dd>
+</dl>
+<br>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getCars">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getCars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getCars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getCars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve cars information from database.
+Returns:</p>
+<blockquote>
+<div><p>JSON: Car information (“CarID”, “Make”, “Type”, “Location”, “Color”, “Seats”, “CostPerHour”,”Status”)</p><br>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getEngineerByUsername">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getEngineerByUsername</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getEngineerByUsername"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getEngineerByUsername" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve engineer’ information from database.
+Returns:</p>
+<blockquote>
+<div><p>JSON: User information (e.g “UserID”, “FirstName”, “LastName”, “UserName”, “Email”, “Role”)</p><br>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getLogins">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getLogins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getLogins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getLogins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve logins’ information from database.
+Returns:</p>
+<blockquote>
+<div><p>JSON: User information (“LoginID”, “UserName”, “Password”)</p><br>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getPendingRepairsByUsername">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getPendingRepairsByUsername</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getPendingRepairsByUsername"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getPendingRepairsByUsername" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all pending repairs by username from database.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>JSON: Repairs information (“RepairID”, “AssignedDate”, “Status”, “CarID”, “UserName”)</p><br>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getRepairsByUsername">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getRepairsByUsername</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getRepairsByUsername"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getRepairsByUsername" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all repairs by username from database.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>JSON: Repairs information (“RepairID”, “AssignedDate”, “Status”, “CarID”, “UserName”,”Make”,”Type”,”Color”,”Seats”,”Location”,”CostPerHour”)</p><br>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getUsers">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getUsers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getUsers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getUsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve users’ information from database.
+Returns:</p>
+<blockquote>
+<div><p>JSON: User information (e.g “UserID”, “FirstName”, “LastName”, “UserName”, “Email”, “Role”)</p><br>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.getdeviceAddresses">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">getdeviceAddresses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#getdeviceAddresses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.getdeviceAddresses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve device addresses information from database.
+Returns:</p>
+<blockquote>
+<div><p>JSON: User information (e.g “DeviceAddress”)</p><br>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="flask_api.reportFaults">
+<code class="sig-prename descclassname">flask_api.</code><code class="sig-name descname">reportFaults</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/flask_api.html#reportFaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flask_api.reportFaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report faulty cars into the database.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>JSON: “message”: “This email is already registered with another account”/”This username is already taken”/”Success”</p><br>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Car Rental Website</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+  <li><a class="reference internal" href="index.html">Home</a></li>
+  <li><a class="reference internal" href="app.html"><span class="std std-ref">App</span></a></li>
+  <li><a class="reference internal" href="database_utils.html"><span class="std std-ref">Database Utilities</span></a></li>
+  <li><a class="reference internal" href="flask_api.html"><span class="std std-ref">Flask_API</span></a></li>
+  <li><a class="reference internal" href="flask_main.html"><span class="std std-ref">Flask Main</span></a></li>
+  <li><a class="reference internal" href="forms.html"><span class="std std-ref">Forms</span></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Task-A</a><ul>
+      <li>Previous: <a href="database_utils.html" title="previous chapter">database_utils module</a></li>
+      <li>Next: <a href="flask_main.html" title="next chapter">flask_main module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/flask_api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

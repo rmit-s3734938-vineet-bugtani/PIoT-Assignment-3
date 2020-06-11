@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>app module &#8212; Car Rental Website  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="database_utils module" href="database_utils.html" />
+    <link rel="prev" title="Task-A" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-app">
+<span id="app-module"></span><h1>app module<a class="headerlink" href="#module-app" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="app-py">
+<p>The main flask app for userfront website.</p>
+<dl class="py function">
+<dt id="app.gmaps">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">gmaps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#gmaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.gmaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays google maps containing car location retrieved from database if logged in. If client not logged in, routes client back to login page.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>HTML: Google maps page with car location / login page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.graphs">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">graphs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#graphs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.graphs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays graphs containing data retrieved from database if logged in. If client not logged in, routes client back to login page.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>HTML: Graphs page (dashboard) / login page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.login">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Routes client to the login page and depending on the user type, redirect client to respective home page. If login fails, redirects back to login page.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>HTML: Home page / Login page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.logout">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs user out and ends the session.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>HTML: Redirects client to home page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.reportFault">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">reportFault</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#reportFault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.reportFault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays page to report faulty cars if logged in. If client not logged in, routes client back to login page.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>HTML: Page to report faulty cars / login page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.sendNotification">
+<code class="sig-prename descclassname">app.</code><code class="sig-name descname">sendNotification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">body</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app.html#sendNotification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.sendNotification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sending notification via pushbullet.</p>
+<dl>
+<dt>Args:</dt><dd><p>title (str) : title of text.</p>
+<p>body (str) : Body of text.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Car Rental Website</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+  <li><a class="reference internal" href="index.html">Home</a></li>
+  <li><a class="reference internal" href="app.html"><span class="std std-ref">App</span></a></li>
+  <li><a class="reference internal" href="database_utils.html"><span class="std std-ref">Database Utilities</span></a></li>
+  <li><a class="reference internal" href="flask_api.html"><span class="std std-ref">Flask_API</span></a></li>
+  <li><a class="reference internal" href="flask_main.html"><span class="std std-ref">Flask Main</span></a></li>
+  <li><a class="reference internal" href="forms.html"><span class="std std-ref">Forms</span></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Task-A</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">Task-A</a></li>
+      <li>Next: <a href="database_utils.html" title="next chapter">database_utils module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/app.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

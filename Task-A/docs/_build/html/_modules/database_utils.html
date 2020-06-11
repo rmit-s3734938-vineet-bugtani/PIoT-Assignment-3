@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>database_utils &#8212; Car Rental Website  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for database_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">MySQLdb</span>
+
+
+<div class="viewcode-block" id="DatabaseUtils"><a class="viewcode-back" href="../database_utils.html#database_utils.DatabaseUtils">[docs]</a><span class="k">class</span> <span class="nc">DatabaseUtils</span><span class="p">:</span>
+    <span class="c1"># Clone of DB from second assignment.</span>
+    <span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;35.244.76.61&quot;</span>
+    <span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="n">PASSWORD</span> <span class="o">=</span> <span class="s2">&quot;abc123&quot;</span>
+    <span class="n">DATABASE</span> <span class="o">=</span> <span class="s2">&quot;CarBookingApp&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">connection</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                <span class="n">DatabaseUtils</span><span class="o">.</span><span class="n">HOST</span><span class="p">,</span>
+                <span class="n">DatabaseUtils</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span>
+                <span class="n">DatabaseUtils</span><span class="o">.</span><span class="n">PASSWORD</span><span class="p">,</span>
+                <span class="n">DatabaseUtils</span><span class="o">.</span><span class="n">DATABASE</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span>
+
+<div class="viewcode-block" id="DatabaseUtils.close"><a class="viewcode-back" href="../database_utils.html#database_utils.DatabaseUtils.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the database connection. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="DatabaseUtils.createTables"><a class="viewcode-back" href="../database_utils.html#database_utils.DatabaseUtils.createTables">[docs]</a>    <span class="k">def</span> <span class="nf">createTables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create database tables if tables do not exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+            <span class="c1"># cursor.execute(&quot;drop table if exists Repairs&quot;)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            create table if not exists Repairs (</span>
+<span class="sd">                RepairID int not null auto_increment,</span>
+<span class="sd">                CarID int not null,</span>
+<span class="sd">                UserName text not null,</span>
+<span class="sd">                AssignedDate date not null,</span>
+<span class="sd">                Status text not null,</span>
+<span class="sd">                constraint PK_Repair primary key (RepairID)</span>
+<span class="sd">                )&quot;&quot;&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># cursor.execute(&quot;insert into User (FirstName,LastName,UserName,Email,Role) values (&#39;Micheal&#39;,&#39;Woods&#39;,&#39;mWoods&#39;,&#39;micheal.woods@gmail.com&#39;,&#39;Engineer&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into User (FirstName,LastName,UserName,Email,Role) values (&#39;Jordan&#39;,&#39;Ponting&#39;,&#39;jPonting&#39;,&#39;jordan.ponting@gmail.com&#39;,&#39;Engineer&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into User (FirstName,LastName,UserName,Email,Role) values (&#39;Paul&#39;,&#39;Adams&#39;,&#39;pAdams&#39;,&#39;paul.adams@gmail.com&#39;,&#39;Engineer&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into User (FirstName,LastName,UserName,Email,Role) values (&#39;Peter&#39;,&#39;Cooper&#39;,&#39;pCooper&#39;,&#39;peter.cooper@gmail.com&#39;,&#39;Engineer&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into User (FirstName,LastName,UserName,Email,Role) values (&#39;John&#39;,&#39;Stocks&#39;,&#39;jStocks&#39;,&#39;john.stocks@gmail.com&#39;,&#39;Engineer&#39;)&quot;)</span>
+
+            <span class="c1"># cursor.execute(&quot;delete from Repairs&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (1,&#39;mWoods&#39;,&#39;2020-01-26&#39;,&#39;Done&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (2,&#39;jStocks&#39;,&#39;2020-01-26&#39;,&#39;Done&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (3,&#39;mWoods&#39;,&#39;2020-02-26&#39;,&#39;Done&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (4,&#39;pAdams&#39;,&#39;2020-02-26&#39;,&#39;Done&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (2,&#39;mWoods&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (3,&#39;mWoods&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (4,&#39;mWoods&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (8,&#39;jPonting&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (12,&#39;pCooper&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Repairs (CarID,UserName,AssignedDate,Status) values (13,&#39;jPonting&#39;,&#39;2020-06-26&#39;,&#39;Pending&#39;)&quot;)</span>
+
+            <span class="c1"># cursor.execute(&quot;insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values (&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;1&#39;,&#39;s3734938&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values (&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2&#39;,&#39;s3734938&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values (&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;3&#39;,&#39;s3734938&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values (&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;4&#39;,&#39;s3734938&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Booking (PickUpDate,PickUpTime,ReturnDate,ReturnTime,CarID,UserName) values (&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;2020-04-27&#39;,&#39;01:00:00&#39;,&#39;5&#39;,&#39;s3734938&#39;)&quot;)</span>
+
+            <span class="c1"># cursor.execute(&quot;insert into Login (UserName,Password) values (&#39;mWoods&#39;,&#39;$5$rounds=535000$ugNI5VuPtJoWv0gM$1vJFgAvtWKxc.NDv9KwkdbtqT7HzZD7JXRLYrKi779D&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Login (UserName,Password) values (&#39;jPonting&#39;,&#39;$5$rounds=535000$WAPcgbS/EIhKeEov$I5C1SEUPNOvWgz9kFc5o.7mtu1XweB2Kj5XReEXfol2&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Login (UserName,Password) values (&#39;pAdams&#39;,&#39;$5$rounds=535000$ATnxcfP11e24E4ih$fXn2YdgzykXx9FXbkIXl/1.WRAo6EbnzQ5eKsfYu7A3&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Login (UserName,Password) values (&#39;pCooper&#39;,&#39;$5$rounds=535000$yTSVW8g5Nhxat10H$Y5/cH.sFJ8qeW2i7WCNBA60MwPavObhmFkdw0lg5Nt7&#39;)&quot;)</span>
+            <span class="c1"># cursor.execute(&quot;insert into Login (UserName,Password) values (&#39;jStocks&#39;,&#39;$5$rounds=535000$Xhqgz7DeaOT/sr56$1IO0ir/W9wdVlnXRcCoRjSaHzxkZ0UFALh96jlun6Q9&#39;)&quot;)</span>
+           
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div></div>
+
+    
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Car Rental Website</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Task-A</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
