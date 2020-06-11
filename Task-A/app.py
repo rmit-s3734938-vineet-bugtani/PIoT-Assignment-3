@@ -15,8 +15,9 @@ site = flask.Blueprint("site", __name__)
 def logout():
     """
     Logs user out and ends the session.
+
     Returns:
-        HTML: Home page.
+        HTML: Redirects client to home page.
     """
     if 'username' in flask.session:
         flask.session.pop('username')
@@ -27,9 +28,10 @@ def logout():
 @site.route("/login", methods=["GET", "POST"])
 def login():
     """
-    Routes user to the login page.
+    Routes client to the login page and depending on the user type, redirect client to respective home page. If login fails, redirects back to login page.
+
     Returns:
-        HTML: Login page.
+        HTML: Home page / Login page
     """
     form = LoginForm()
     if 'username' in flask.session:
@@ -54,6 +56,12 @@ def login():
 
 @site.route('/graphs', methods=["GET", "POST"])
 def graphs():
+    """
+    Displays graphs containing data retrieved from database if logged in. If client not logged in, routes client back to login page. 
+
+    Returns:
+        HTML: Graphs page (dashboard) / login page
+    """
     if 'username' in flask.session:
         return flask.render_template('graphs.html')
     else:
@@ -61,6 +69,12 @@ def graphs():
 
 @site.route('/gmaps', methods=["GET", "POST"])
 def gmaps():
+    """
+    Displays google maps containing car location retrieved from database if logged in. If client not logged in, routes client back to login page. 
+
+    Returns:
+        HTML: Google maps page with car location / login page
+    """
     if 'username' in flask.session:
         response = requests.get(
             flask.request.host_url + "/pendingRepairsByUsername/" + flask.session['username']
@@ -78,6 +92,12 @@ def gmaps():
 
 @site.route("/reportFault", methods=["GET", "POST"])
 def reportFault():
+    """
+    Displays page to report faulty cars if logged in. If client not logged in, routes client back to login page. 
+
+    Returns:
+        HTML: Page to report faulty cars / login page
+    """
     if 'username' in flask.session:
         carIds = []
         for x in flask.request.args.getlist('ids'):
@@ -98,10 +118,12 @@ def reportFault():
 
 
 def sendNotification(title, body):
-    """ Sending notification via pushbullet.
-        Args:
-            title (str) : title of text.
-            body (str) : Body of text.
+    """ 
+    Sending notification via pushbullet.
+    
+    Args:
+        title (str) : title of text. \n
+        body (str) : Body of text.
     """
     # TODO Personal api token. Remove api token before making repo public.
     ACCESS_TOKEN="o.nTPc8SLF2J2nCkfIJQu4ZLCitYpcN2Fc"
