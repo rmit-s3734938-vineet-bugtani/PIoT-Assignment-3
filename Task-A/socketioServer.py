@@ -41,6 +41,7 @@ def authorize_engineer(message):
     print(auth)
     return auth, engineer[0]["UserName"]
 
+# Get engineer profile event
 @sios.on('qr_profile')
 def get_profile(message):
     # Request engineer profile from receieved qr username
@@ -50,8 +51,3 @@ def get_profile(message):
         return False, profile
     # Return profile information
     return True, profile
-
-# Get engineer profile event
-@sios.on('profile')
-def get_profile(message):
-    return
