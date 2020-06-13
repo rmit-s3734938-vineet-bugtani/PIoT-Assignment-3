@@ -417,6 +417,15 @@ def getEngineerByUsername(username):
     jsonResult = jsonify(result)
     return jsonResult, 200
 
+# API to get user by device address
+@api.route("/engineer/mac/<deviceaddress>", methods=['GET'])
+def getUsernameByAddress(deviceaddress):
+    user = User.query.filter(User.DeviceAddress == deviceaddress)
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid device address"}), 404
+    return jsonify(result)
+
 # API to assign faulty cars
 @api.route("/reportFaults", methods=["GET", "POST"])
 def reportFaults():
