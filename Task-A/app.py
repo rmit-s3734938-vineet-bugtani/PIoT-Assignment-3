@@ -8,6 +8,8 @@ import flask
 import json, requests
 from forms import RepairsForm, LoginForm
 from passlib.hash import sha256_crypt
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import expose, AdminIndexView, Admin, BaseView
 
 site = flask.Blueprint("site", __name__)
 
@@ -136,3 +138,20 @@ def sendNotification(title, body):
         print('Something went wrong while sending Pushbullet notification.')
     else:
         print('Pushbullet notification sent.')
+
+class Controller(ModelView):
+    def is_accessible(self):
+        if 'username' in flask.session:
+            return True
+        else:
+            return False
+
+class AdminIndex(AdminIndexView):
+    @expose('/')
+    def index(self):
+        if 'username' not in flask.session:
+            return flask.redirect(flask.url_for("site.login"))
+        else:
+            return self.render('admin/index.html')
+
+        

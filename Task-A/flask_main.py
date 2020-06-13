@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_api import *
 from flask_admin import expose, AdminIndexView, Admin, BaseView
 from flask_admin.contrib.sqla import ModelView
-from app import site
+from app import *
 from database_utils import DatabaseUtils
 
 app = Flask(__name__)
@@ -28,7 +28,7 @@ class LoginView(BaseView):
     def index(self):
         return flask.redirect(flask.url_for("site.logout"))
 
-admin = Admin(app)
+admin = Admin(app, 'Admin Page', index_view=AdminIndex())
 admin.add_view(CarModelView(Car,db.session,name='View Cars'))
 admin.add_view(UserModelView(User,db.session,name='View Users'))
 admin.add_view(BookingModelView(Booking,db.session,name='View Bookings'))
