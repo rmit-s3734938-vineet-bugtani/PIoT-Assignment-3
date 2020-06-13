@@ -48,7 +48,8 @@ class agentClient:
             
     def display_menu(self):
         self.clear()
-        print("Engineer Authnetication App")
+        print("Engineer Authentication App")
+        print("Car ID: " + self.carID)
         print("1. Engineer Bluetooth Scan")
         print("2. QR Code Profile Scan")
         print("3. Exit")
@@ -79,8 +80,9 @@ class agentClient:
             # Verify engineer authorization for car via device address
             print("Checking engineer authorization")
             auth, name = self.sioc.call('authorize', data=[self.carID, device_address])
+            print(auth)
             if auth == False:
-                print("Engineer " + name + "is not authorized to work on this car")
+                print("Engineer " + name + " is not authorized to work on this car")
                 print("Returning to menu")
                 time.sleep(3)
                 self.sioc.emit('reset', callback = self.display_menu)

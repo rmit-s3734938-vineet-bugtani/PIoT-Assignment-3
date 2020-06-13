@@ -34,10 +34,12 @@ def authorize_engineer(message):
     response = requests.get(request.host_url + "/repairsByUsername/" + engineer[0]["UserName"])
     repairs = json.loads(response.text)
     # Return engineer name, true or false
+    auth = False
     for item in repairs:
-        if carID == item['CarID']:
-            return True, engineer[0]["UserName"]
-    return False, engineer[0]["UserName"]
+        if carID == str(item['CarID']):
+            auth = True
+    print(auth)
+    return auth, engineer[0]["UserName"]
 
 @sios.on('qr_profile')
 def get_profile(message):
