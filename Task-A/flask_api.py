@@ -452,6 +452,8 @@ def reportFaults():
             Status="Pending"
         )
         db.session.add(newRepair)
+        car = Car.query.filter(Car.CarID == x)
+        car[0].Status = 'Under Repair'
         sendNotification("Vehicle reported for repair", "Vehicle {v} was reported for repair to {e}".format(v=x, e=engineerName))
     db.session.commit()
     return jsonify({"message": "Success"})
