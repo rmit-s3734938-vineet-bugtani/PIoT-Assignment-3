@@ -266,6 +266,7 @@ class UserModelView(ModelView):
 class CarModelView(ModelView):
     column_searchable_list = ["Make", "Type", "Color", "Seats"]
 
+    list_template = 'admin/custom_list.html'
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
     def action_approve(self, ids):
         return flask.redirect(url_for('site.reportFault', ids = ids))

@@ -1,0 +1,10 @@
+{% extends 'admin/model/list.html' %}
+{% block model_menu_bar_after_filters %}
+    <button id='voice-search'>Speak</button>
+    <div id='message'></div>
+{% endblock %}
+
+{% block tail %}
+    <script src="{{ url_for('static', filename='myscript.js') }}"></script>
+    {{ super() }}
+{% endblock %}
