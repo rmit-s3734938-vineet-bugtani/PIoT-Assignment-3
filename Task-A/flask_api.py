@@ -11,7 +11,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.actions import action
 from forms import RepairsForm
 from datetime import date, time
-from app import site, sendNotification
+from app import *
 from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
@@ -256,20 +256,21 @@ class RepairDetailsSchema(ma.Schema):
             "Seats",
             "CostPerHour",
         )
-class BookingModelView(ModelView):
+
+class BookingModelView(Controller):
     """
     Part of flask_admin API that display, create and add Bookings into the database. 
     """
     can_create = False
     column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
 
-class UserModelView(ModelView):
+class UserModelView(Controller):
     """
     Part of flask_admin API that display, create and add Users into the database. 
     """
     column_list = ('FirstName','LastName','UserName','Email','Role')
 
-class CarModelView(ModelView):
+class CarModelView(Controller):
     """
     Part of flask_admin API that display, create and add Cars into the database. 
     """
