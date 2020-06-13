@@ -46,7 +46,7 @@ class agentClient:
     def connect(self):
         self.sioc.connect(self.ip)
             
-    def displayMenu(self):
+    def display_menu(self):
         self.clear()
         print("Engineer Authnetication App")
         print("1. Engineer Bluetooth Scan")
@@ -59,19 +59,7 @@ class agentClient:
             self.sioc.emit('maclist', callback= self.bluetooth_auth)
         # Get engineer profile through QR code
         elif option == '2':
-            # Detect image
-                imageName = input('Please enter image name: ')
-                if os.path.exists('./QRCodes/' + imageName):
-                    username = self.getUsernameFromQR(imageName)
-                    print(username)
-                    time.sleep(5)
-                    self.displayMenu()
-                    # self.sioc.emit('reset', callback = self.displayMenu)
-                else :
-                    print("No image found.")
-                    time.sleep(1)
-                    self.displayMenu()
-                    # self.sioc.emit('reset', callback = self.displayMenu)
+            self.qr_profile()
         # Close program
         elif option == '3':
             self.sioc.disconnect()
@@ -95,21 +83,42 @@ class agentClient:
                 print("Engineer " + name + "is not authorized to work on this car")
                 print("Returning to menu")
                 time.sleep(3)
-                self.sioc.emit('reset', callback = self.displayMenu)
+                self.sioc.emit('reset', callback = self.display_menu)
             else:
                 print("Hello engineer " + name)
                 print("Device address ==", device_address)
                 print("You are authorized to perform maintenance on this car")
                 print("Car unlocked, press enter when finished with maintenance")
                 input()
-                self.sioc.emit('reset', callback = self.displayMenu)
+                self.sioc.emit('reset', callback = self.display_menu)
         else:
             print("Authorized device not found")
-            self.sioc.emit('reset', callback = self.displayMenu)
+            self.sioc.emit('reset', callback = self.display_menu)
+        
+    def qr_profile(self):
+        # Detect image
+        imageName = input('Please enter image name: ')
+        if os.path.exists('./QRCodes/' + imageName):
+            username = self.getUsernameFromQR(imageName)
+            found, profile = self.sioc.call('qr_profile', data=username)
+            if found == False:
+                print("No profile found, please use a correct QR code")
+                time.sleep(2)
+                self.sioc.emit('reset', callback = self.display_menu)
+            print("Email: " + profile[0]["Email"])
+            print("First name: " + profile[0]["FirstName"])
+            print("Last name: " + profile[0]["LastName"])
+            print("Number of repairs assigned: "+ str(profile[0]["Number of repairs assigned"]))
+            time.sleep(10)
+            self.sioc.emit('reset', callback = self.display_menu)
+        else :
+            print("No image found.")
+            time.sleep(1)
+            self.sioc.emit('reset', callback = self.display_menu)
 
 
 if __name__ == "__main__":
     agent = agentClient()
     agent.load_config()
     agent.connect()
-    agent.displayMenu()
+    agent.display_menu()
