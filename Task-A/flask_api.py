@@ -11,7 +11,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.actions import action
 from forms import RepairsForm
 from datetime import date, time
-from app import site, sendNotification
+from app import *
 from passlib.hash import sha256_crypt
 
 api = Blueprint("api", __name__)
@@ -256,25 +256,27 @@ class RepairDetailsSchema(ma.Schema):
             "Seats",
             "CostPerHour",
         )
-class BookingModelView(ModelView):
+
+class BookingModelView(Controller):
     """
     Part of flask_admin API that display, create and add Bookings into the database. 
     """
     can_create = False
-    column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
+    column_list = ('BookingID','PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
 
-class UserModelView(ModelView):
+class UserModelView(Controller):
     """
     Part of flask_admin API that display, create and add Users into the database. 
     """
-    column_list = ('FirstName','LastName','UserName','Email','Role')
-    column_searchable_list = ('FirstName','LastName','UserName','Email','Role')
-
-class CarModelView(ModelView):
+    column_list = ('UserID','FirstName','LastName','UserName','Email','Role')
+    column_searchable_list = ("UserID","FirstName","LastName","UserName","Email","Role")
+    
+class CarModelView(Controller):
     """
     Part of flask_admin API that display, create and add Cars into the database. 
     """
-    column_searchable_list = ["Make", "Type", "Color", "Seats"]
+    column_list = ('CarID','Make','Type','Location','Color','Seats','CostPerHour', 'Status')
+    column_searchable_list = ["CarID","Make", "Type", "Color", "Seats", "Status"]
 
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
     def action_approve(self, ids):
@@ -467,6 +469,8 @@ def reportFaults():
             Status="Pending"
         )
         db.session.add(newRepair)
+        car = Car.query.filter(Car.CarID == x)
+        car[0].Status = 'Under Repair'
         sendNotification("Vehicle reported for repair", "Vehicle {v} was reported for repair to {e}".format(v=x, e=engineerName))
     db.session.commit()
     return jsonify({"message": "Success"})
