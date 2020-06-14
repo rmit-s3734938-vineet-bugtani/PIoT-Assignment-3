@@ -7,6 +7,8 @@ from os.path import exists
 from os import system, name
 
 class agentClient:
+    """Agent class which runs on Agent RPi
+    """
     ip = None
     carID = None
 
@@ -44,9 +46,13 @@ class agentClient:
             return username
 
     def connect(self):
+        """Connect socket to ip provided in config.json
+        """
         self.sioc.connect(self.ip)
             
     def display_menu(self):
+        """Displays console based menu to user
+        """
         self.clear()
         print("Engineer Authentication App")
         print("Car ID: " + self.carID)
@@ -69,7 +75,8 @@ class agentClient:
             sys.exit("Incorrect Input")
     
     def bluetooth_auth(self, mac_list):
-        # Check surrounding devices against authorized mac addresses
+        """Check surrounding devices against authorized mac addresses
+        """
         device_address = None
         nearby_devices = bluetooth.discover_devices()
         for mac_address in nearby_devices:
@@ -97,7 +104,8 @@ class agentClient:
             self.sioc.emit('reset', callback = self.display_menu)
         
     def qr_profile(self):
-        # Detect image
+        """Detect QR code image
+        """
         imageName = input('Please enter image name: ')
         if os.path.exists('./QRCodes/' + imageName):
             username = self.getUsernameFromQR(imageName)
