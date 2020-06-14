@@ -491,3 +491,18 @@ def checkLogin():
             userRole = (User.query.filter_by(UserName=data["username"]).first()).Role
             return jsonify({"message": "Success", "userRole": userRole})
     return jsonify({"message": "Invalid username or password"}), 404
+
+# API to update car status and repair status
+@api.route("/fixcar", methods=["GET", "POST"])
+def fixcar():
+    data = request.get_json(force=True)
+    if 'CarID' not in data:
+        return jsonify({"message": "CarID not supplied"}), 400
+    if 'RepairID' not in data:
+        return jsonify({"message": "RepairID not supplied"}), 400
+    car = Car.query.filter(Car.CarID == data['CarID'])
+    car[0].Status = 'Available'
+    repair = Repairs.query.filter(Repairs.RepairID == data['RepairID'])
+    repair[0].Status = 'Done'
+    db.session.commit()
+    return jsonify({"message": "Success"})
