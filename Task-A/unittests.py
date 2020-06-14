@@ -14,6 +14,11 @@ class TestStringMethods(unittest.TestCase):
     BASE_URL = "http://192.168.1.225:5000"
     INCORRECT_USERNAME = "mWoodss"
 
+    """
+    API Route testing
+
+    Checks engineer repair reporting and login routes.
+    """
     # Tests for "/engineer/<username>" - API to get engineer profile by username
     def test_engineer_inCorrectUsername(self):
         response = requests.get(self.BASE_URL+"/engineer/"+self.INCORRECT_USERNAME)
@@ -86,6 +91,12 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(data["message"], "Password not supplied")
         self.assertEqual(response.status_code, 400)
     
+    """
+    Following seven tests test the voice recognition against flac files
+
+    Translates a flac file to text and asserts the correct text output
+    """
+
     def test_audio_one(self):
         text = voice_search.start_recognition("audio/1.flac")
         self.assertEqual(text.lower(), "alto")
