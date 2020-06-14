@@ -41,6 +41,19 @@ Navigate to Agent
 Edit the config.json to your selected car ID and set the IP to the device hosting the site
 Run python3 agent.py
 
+### Login information
+Admin
+Username: s3734938
+Password: password
+
+Manager
+Username: ryan
+Password: pass
+
+Engineer
+Username: mWoods
+Password: mWoodspass
+
 ### Unit Tests
 Separate unit tests can be found in the Agent and Master directories
 Agent tests require the site to be running and connectable
