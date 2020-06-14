@@ -262,20 +262,21 @@ class BookingModelView(Controller):
     Part of flask_admin API that display, create and add Bookings into the database. 
     """
     can_create = False
-    column_list = ('PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
+    column_list = ('BookingID','PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
 
 class UserModelView(Controller):
     """
     Part of flask_admin API that display, create and add Users into the database. 
     """
-    column_list = ('FirstName','LastName','UserName','Email','Role')
-    column_searchable_list = ('FirstName','LastName','UserName','Email','Role')
+    column_list = ('UserID','FirstName','LastName','UserName','Email','Role')
+    column_searchable_list = ("UserID","FirstName","LastName","UserName","Email","Role")
 
 class CarModelView(Controller):
     """
     Part of flask_admin API that display, create and add Cars into the database. 
     """
-    column_searchable_list = ["Make", "Type", "Color", "Seats"]
+    column_list = ('CarID','Make','Type','Location','Color','Seats','CostPerHour', 'Status')
+    column_searchable_list = ["CarID","Make", "Type", "Color", "Seats", "Status"]
 
     @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
     def action_approve(self, ids):
