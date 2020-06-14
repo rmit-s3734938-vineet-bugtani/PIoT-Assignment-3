@@ -301,7 +301,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Part of flask_admin API that display, create and add Users into the database. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">column_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">,</span><span class="s1">&#39;LastName&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">,</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span><span class="s1">&#39;Role&#39;</span><span class="p">)</span></div>
+    <span class="n">column_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">,</span><span class="s1">&#39;LastName&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">,</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span><span class="s1">&#39;Role&#39;</span><span class="p">)</span>
+    <span class="n">column_searchable_list</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FirstName&#39;</span><span class="p">,</span><span class="s1">&#39;LastName&#39;</span><span class="p">,</span><span class="s1">&#39;UserName&#39;</span><span class="p">,</span><span class="s1">&#39;Email&#39;</span><span class="p">,</span><span class="s1">&#39;Role&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CarModelView"><a class="viewcode-back" href="../flask_api.html#flask_api.CarModelView">[docs]</a><span class="k">class</span> <span class="nc">CarModelView</span><span class="p">(</span><span class="n">ModelView</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -327,6 +328,7 @@
 <span class="k">def</span> <span class="nf">getUsers</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve users&#39; information from database.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        JSON: User information (e.g &quot;UserID&quot;, &quot;FirstName&quot;, &quot;LastName&quot;, &quot;UserName&quot;, &quot;Email&quot;, &quot;Role&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -339,6 +341,7 @@
 <span class="k">def</span> <span class="nf">getLogins</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve logins&#39; information from database.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        JSON: User information (&quot;LoginID&quot;, &quot;UserName&quot;, &quot;Password&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -351,6 +354,7 @@
 <span class="k">def</span> <span class="nf">getCars</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve cars information from database.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        JSON: Car information (&quot;CarID&quot;, &quot;Make&quot;, &quot;Type&quot;, &quot;Location&quot;, &quot;Color&quot;, &quot;Seats&quot;, &quot;CostPerHour&quot;,&quot;Status&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -363,6 +367,7 @@
 <span class="k">def</span> <span class="nf">getdeviceAddresses</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve device addresses information from database.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        JSON: User information (e.g &quot;DeviceAddress&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -435,6 +440,7 @@
 <span class="k">def</span> <span class="nf">getEngineerByUsername</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve engineer&#39; information from database.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        JSON: User information (e.g &quot;UserID&quot;, &quot;FirstName&quot;, &quot;LastName&quot;, &quot;UserName&quot;, &quot;Email&quot;, &quot;Role&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -450,6 +456,15 @@
     <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Repair data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
     <span class="n">jsonResult</span> <span class="o">=</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jsonResult</span><span class="p">,</span> <span class="mi">200</span></div>
+
+<span class="c1"># API to get user by device address</span>
+<div class="viewcode-block" id="getUsernameByAddress"><a class="viewcode-back" href="../flask_api.html#flask_api.getUsernameByAddress">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/engineer/mac/&lt;deviceaddress&gt;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">getUsernameByAddress</span><span class="p">(</span><span class="n">deviceaddress</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DeviceAddress</span> <span class="o">==</span> <span class="n">deviceaddress</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">usersSchema</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid device address&quot;</span><span class="p">}),</span> <span class="mi">404</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 <span class="c1"># API to assign faulty cars</span>
 <div class="viewcode-block" id="reportFaults"><a class="viewcode-back" href="../flask_api.html#flask_api.reportFaults">[docs]</a><span class="nd">@api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/reportFaults&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
@@ -569,7 +584,7 @@
       &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

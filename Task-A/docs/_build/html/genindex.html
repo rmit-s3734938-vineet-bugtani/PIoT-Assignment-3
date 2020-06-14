@@ -52,6 +52,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -146,10 +147,10 @@
 </li>
       <li><a href="database_utils.html#database_utils.DatabaseUtils.close">close() (database_utils.DatabaseUtils method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flask_api.html#flask_api.Car.Color">Color (flask_api.Car attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flask_api.html#flask_api.BookingModelView.column_list">column_list (flask_api.BookingModelView attribute)</a>
 
       <ul>
@@ -159,7 +160,11 @@
 </li>
       </ul></li>
       <li><a href="flask_api.html#flask_api.CarModelView.column_searchable_list">column_searchable_list (flask_api.CarModelView attribute)</a>
+
+      <ul>
+        <li><a href="flask_api.html#flask_api.UserModelView.column_searchable_list">(flask_api.UserModelView attribute)</a>
 </li>
+      </ul></li>
       <li><a href="flask_api.html#flask_api.Car.CostPerHour">CostPerHour (flask_api.Car attribute)</a>
 </li>
       <li><a href="flask_api.html#flask_api.BookingModelView.create_view">create_view() (flask_api.BookingModelView method)</a>
@@ -302,11 +307,13 @@
 </li>
       <li><a href="flask_api.html#flask_api.getLogins">getLogins() (in module flask_api)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flask_api.html#flask_api.getPendingRepairsByUsername">getPendingRepairsByUsername() (in module flask_api)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="flask_api.html#flask_api.getRepairsByUsername">getRepairsByUsername() (in module flask_api)</a>
+</li>
+      <li><a href="flask_api.html#flask_api.getUsernameByAddress">getUsernameByAddress() (in module flask_api)</a>
 </li>
       <li><a href="flask_api.html#flask_api.getUsers">getUsers() (in module flask_api)</a>
 </li>
@@ -394,6 +401,8 @@
 </li>
         <li><a href="unittests.html#module-unittests">unittests</a>
 </li>
+        <li><a href="voice_search.html#module-voice_search">voice_search</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -473,9 +482,17 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="voice_search.html#voice_search.sample_recognize">sample_recognize() (in module voice_search)</a>
+</li>
       <li><a href="flask_api.html#flask_api.Car.Seats">Seats (flask_api.Car attribute)</a>
 </li>
       <li><a href="app.html#app.sendNotification">sendNotification() (in module app)</a>
+</li>
+      <li><a href="voice_search.html#voice_search.start">start() (in module voice_search)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="voice_search.html#voice_search.start_recognition">start_recognition() (in module voice_search)</a>
 </li>
       <li><a href="flask_api.html#flask_api.Car.Status">Status (flask_api.Car attribute)</a>
 
@@ -483,8 +500,6 @@
         <li><a href="flask_api.html#flask_api.Repairs.Status">(flask_api.Repairs attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="forms.html#forms.LoginForm.submit">submit (forms.LoginForm attribute)</a>
 
       <ul>
@@ -563,6 +578,19 @@
   </ul></td>
 </tr></table>
 
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    voice_search
+
+      <ul>
+        <li><a href="voice_search.html#module-voice_search">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
 
 
           </div>
@@ -619,7 +647,7 @@
       &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

@@ -33,11 +33,16 @@
             
   <h1>Source code for flask_main</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">render_template</span>
+<span class="c1">#import eventlet</span>
+<span class="c1">#eventlet.monkey_patch()</span>
+<span class="c1"># from gevent import monkey</span>
+<span class="c1"># monkey.patch_all(subprocess=True)</span>
 <span class="kn">from</span> <span class="nn">flask_api</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">flask_admin</span> <span class="kn">import</span> <span class="n">expose</span><span class="p">,</span> <span class="n">AdminIndexView</span><span class="p">,</span> <span class="n">Admin</span><span class="p">,</span> <span class="n">BaseView</span>
 <span class="kn">from</span> <span class="nn">flask_admin.contrib.sqla</span> <span class="kn">import</span> <span class="n">ModelView</span>
 <span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">site</span>
 <span class="kn">from</span> <span class="nn">database_utils</span> <span class="kn">import</span> <span class="n">DatabaseUtils</span>
+<span class="kn">from</span> <span class="nn">socketioServer</span> <span class="kn">import</span> <span class="n">sios</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;5791628bb0b13ce0c676dfde280ba245&#39;</span>
@@ -53,6 +58,8 @@
 
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+
+<span class="n">sios</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LoginView"><a class="viewcode-back" href="../flask_main.html#flask_main.LoginView">[docs]</a><span class="k">class</span> <span class="nc">LoginView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -72,6 +79,7 @@
     <span class="c1"># with DatabaseUtils() as db:</span>
     <span class="c1">#     db.createTables()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#sios.run(app, host = &quot;192.168.1.225&quot;, debug=True)</span>
 </pre></div>
 
           </div>
@@ -130,7 +138,7 @@
       &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

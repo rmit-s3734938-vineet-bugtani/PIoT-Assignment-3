@@ -270,7 +270,7 @@ class UserModelView(Controller):
     """
     column_list = ('UserID','FirstName','LastName','UserName','Email','Role')
     column_searchable_list = ("UserID","FirstName","LastName","UserName","Email","Role")
-
+    
 class CarModelView(Controller):
     """
     Part of flask_admin API that display, create and add Cars into the database. 
@@ -296,6 +296,7 @@ repairDetailsSchema = RepairDetailsSchema(many=True)
 def getUsers():
     """
     Retrieve users' information from database.
+    
     Returns:
         JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
     """
@@ -308,6 +309,7 @@ def getUsers():
 def getLogins():
     """
     Retrieve logins' information from database.
+
     Returns:
         JSON: User information ("LoginID", "UserName", "Password")
     """
@@ -320,6 +322,7 @@ def getLogins():
 def getCars():
     """
     Retrieve cars information from database.
+
     Returns:
         JSON: Car information ("CarID", "Make", "Type", "Location", "Color", "Seats", "CostPerHour","Status")
     """
@@ -332,6 +335,7 @@ def getCars():
 def getdeviceAddresses():
     """
     Retrieve device addresses information from database.
+
     Returns:
         JSON: User information (e.g "DeviceAddress")
     """
@@ -404,6 +408,7 @@ def getRepairsByUsername(username):
 def getEngineerByUsername(username):
     """
     Retrieve engineer' information from database.
+
     Returns:
         JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
     """

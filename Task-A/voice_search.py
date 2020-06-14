@@ -1,3 +1,7 @@
+"""
+Voice Search via console using pre-recorded audio samples.
+"""
+
 from google.cloud import speech_v1
 from google.cloud.speech_v1 import enums
 import io, os, sys
@@ -45,6 +49,14 @@ def sample_recognize(local_file_path):
 
 
 def start_recognition(file_path="audio/1.flac"):
+    """Sets the environment variables needed by Google SDK, then sends file path to transcribe.
+
+    Args:
+        file_path (str, optional): File path to transcribe. Defaults to "audio/1.flac".
+
+    Returns:
+        str: Transcribed text from audio file.
+    """
     # TODO Remove personal token before publishing repo.
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "creds/google-stt.json"
     os.environ["GCLOUD_PROJECT"] = "quickstart-1587792864879"
@@ -53,6 +65,11 @@ def start_recognition(file_path="audio/1.flac"):
 
 
 def start(file_path):
+    """Transcribe text from audio, then open browser with parsed search query.
+
+    Args:
+        file_path (str): Path to audio file, to transcribe search query from.
+    """
     transcript = start_recognition(file_path)
     url = ''
     search_query = ''
