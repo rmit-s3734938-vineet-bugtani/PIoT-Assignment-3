@@ -7,7 +7,6 @@ flask-marshmallow==0.11.0
 Flask-SQLAlchemy==2.4.1
 Flask-SocketIO==4.3.0
 Flask-WTF==0.14.3
-gevent-websocket
 idna==2.9
 itsdangerous==1.1.0
 Jinja2==2.11.2
@@ -19,6 +18,7 @@ numpy==1.18.4
 opencv-python==4.2.0.34
 passlib==1.7.2
 py==1.8.1
+python-socketio
 pyzbar==0.1.8
 requests==2.23.0
 six==1.15.0
