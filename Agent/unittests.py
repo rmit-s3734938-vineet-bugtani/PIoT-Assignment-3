@@ -11,7 +11,8 @@ class Agent_Tests(unittest.TestCase):
 
     # Config and testing methods
     def load_config(self) :
-        """ Loads json config from config.json
+        """ 
+        Loads json config from config.json
         """
         try:
             with open("config.json") as f:
@@ -48,18 +49,30 @@ class Agent_Tests(unittest.TestCase):
 
     # Tests require master server to be running
     
-    # Test connection to Master server by retrieving SID
-    # SID is the ID assigned to a socket connection by Master
+    """
+    Test socket connection with master.
+
+    Checks for sid after connecting
+    """
     def test_Socket_Connection(self):
         sid = self.client.sid
         self.assertTrue(sid)
+
     
-    # Test that authorized device address list returns
+    """
+    Test retrieving authorized devices list.
+
+    Checks for list after retrieving
+    """
     def test_Maclist_Return(self):
         mac_list = self.client.call('maclist')
         self.assertTrue(mac_list)
     
-    # Test unauthorized mac address
+    """
+    Test for appropriate response to unauthorized address
+
+    Checks if address is in mac_list
+    """
     def test_Unauth_Address(self):
         mac_list = self.client.call('maclist')
         mac = "TH:IS:IS:FA:KE"
@@ -68,14 +81,22 @@ class Agent_Tests(unittest.TestCase):
             auth = True
         self.assertFalse(auth)
 
-    # Test unknown QR code
+    """
+    Test unknown QR code image
+
+    Scans a QR code containing a username not in database and asserts correct response
+    """
     def test_QR_Profile_Incorrect(self):
         imageName = "fakename.png"
         username = self.getUsernameFromQR(imageName)
         found, profile = self.client.call('qr_profile', data=username)
         self.assertFalse(found)
     
-    # Test known QR code
+    """
+    Test known QR code image
+
+    Scans a QR code containing a username in database and asserts correct response
+    """
     def test_QR_Profile_Correct(self):
         imageName = "mWoods.png"
         username = self.getUsernameFromQR(imageName)
