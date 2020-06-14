@@ -2,7 +2,7 @@
 
 ## Team Members
 
-Ryan Cassidy (s3740446) - Worked on Task-B and C (agent.py, socketing between Pi's, bluetooth, qr, Trello Board, Unit Testing)
+Ryan Cassidy (s3740446) - Worked on Task-B and C (API, agent.py, socketing between Pi's, bluetooth, qr, Trello Board, Unit Testing)
 
 Vineet Bugtani (s3734938) - Worked on Task-A and C (API, Site, Google Cloud Database,, qr Unit Testing, Trello Board, Google Maps)
 
