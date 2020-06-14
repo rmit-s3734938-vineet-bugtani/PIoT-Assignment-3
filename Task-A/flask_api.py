@@ -269,7 +269,7 @@ class UserModelView(Controller):
     Part of flask_admin API that display, create and add Users into the database. 
     """
     column_list = ('UserID','FirstName','LastName','UserName','Email','Role')
-    column_searchable_list = ["UserID","FirstName","LastName","UserName","Email","Role"]
+    column_searchable_list = ("UserID","FirstName","LastName","UserName","Email","Role")
 
 class CarModelView(Controller):
     """
@@ -419,6 +419,15 @@ def getEngineerByUsername(username):
     result[0]['Repair data'] = data
     jsonResult = jsonify(result)
     return jsonResult, 200
+
+# API to get user by device address
+@api.route("/engineer/mac/<deviceaddress>", methods=['GET'])
+def getUsernameByAddress(deviceaddress):
+    user = User.query.filter(User.DeviceAddress == deviceaddress)
+    result = usersSchema.dump(user)
+    if(len(result) == 0):
+        return jsonify({"message": "Invalid device address"}), 404
+    return jsonify(result)
 
 # API to assign faulty cars
 @api.route("/reportFaults", methods=["GET", "POST"])
