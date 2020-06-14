@@ -10,3 +10,4 @@ Task-A
    flask_main
    forms
    unittests
+   voice_search

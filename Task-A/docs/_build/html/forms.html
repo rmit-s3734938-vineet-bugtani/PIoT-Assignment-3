@@ -41,7 +41,21 @@
 <em class="property">class </em><code class="sig-prename descclassname">forms.</code><code class="sig-name descname">LoginForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/forms.html#LoginForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#forms.LoginForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
 <p>Form to gather login details.</p>
-<br>
+<dl class="py attribute">
+<dt id="forms.LoginForm.password">
+<code class="sig-name descname">password</code><em class="property"> = &lt;UnboundField(PasswordField, ('Password',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#forms.LoginForm.password" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="forms.LoginForm.submit">
+<code class="sig-name descname">submit</code><em class="property"> = &lt;UnboundField(SubmitField, ('Login',), {})&gt;</em><a class="headerlink" href="#forms.LoginForm.submit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="forms.LoginForm.username">
+<code class="sig-name descname">username</code><em class="property"> = &lt;UnboundField(StringField, ('Username',), {'validators': [&lt;wtforms.validators.DataRequired object&gt;]})&gt;</em><a class="headerlink" href="#forms.LoginForm.username" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -49,7 +63,15 @@
 <em class="property">class </em><code class="sig-prename descclassname">forms.</code><code class="sig-name descname">RepairsForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/forms.html#RepairsForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#forms.RepairsForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_wtf.form.FlaskForm</span></code></p>
 <p>Form to gather information about car repairs.</p>
-<br>
+<dl class="py attribute">
+<dt id="forms.RepairsForm.engineerName">
+<code class="sig-name descname">engineerName</code><em class="property"> = &lt;UnboundField(SelectField, ('Select engineer:',), {'choices': [('mWoods', 'Micheal Woods'), ('jPonting', 'Jordan Ponting'), ('pAdams', 'Paul Adams'), ('pCooper', 'Peter Cooper'), ('jStocks', 'John Stocks')], 'default': 'mWoods'})&gt;</em><a class="headerlink" href="#forms.RepairsForm.engineerName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="forms.RepairsForm.submit">
+<code class="sig-name descname">submit</code><em class="property"> = &lt;UnboundField(SubmitField, ('Submit',), {})&gt;</em><a class="headerlink" href="#forms.RepairsForm.submit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -73,13 +95,15 @@
 
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-  <li><a class="reference internal" href="index.html">Home</a></li>
-  <li><a class="reference internal" href="app.html"><span class="std std-ref">App</span></a></li>
-  <li><a class="reference internal" href="database_utils.html"><span class="std std-ref">Database Utilities</span></a></li>
-  <li><a class="reference internal" href="flask_api.html"><span class="std std-ref">Flask_API</span></a></li>
-  <li><a class="reference internal" href="flask_main.html"><span class="std std-ref">Flask Main</span></a></li>
-  <li><a class="reference internal" href="forms.html"><span class="std std-ref">Forms</span></a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Task-A</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_utils.html">database_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask_api.html">flask_api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask_main.html">flask_main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">forms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unittests.html">unittests module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voice_search.html">voice_search module</a></li>
 </ul>
 </li>
 </ul>
@@ -121,7 +145,7 @@
       &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
