@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voice_search module &#8212; Car Rental Website  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="agent module" href="agent.html" />
+    <link rel="prev" title="forms module" href="forms.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-voice_search">
+<span id="voice-search-module"></span><h1>voice_search module<a class="headerlink" href="#module-voice_search" title="Permalink to this headline">¶</a></h1>
+<p>Voice Search via console using pre-recorded audio samples.</p>
+<dl class="py function">
+<dt id="voice_search.sample_recognize">
+<code class="sig-prename descclassname">voice_search.</code><code class="sig-name descname">sample_recognize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#voice_search.sample_recognize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transcribe a short audio file using synchronous speech recognition</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>local_file_path Path to local audio file, e.g. /path/audio.wav</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: Transcript of audio file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="voice_search.start">
+<code class="sig-prename descclassname">voice_search.</code><code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#voice_search.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transcribe text from audio, then open browser with parsed search query.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): Path to audio file, to transcribe search query from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="voice_search.start_recognition">
+<code class="sig-prename descclassname">voice_search.</code><code class="sig-name descname">start_recognition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">'audio/1.flac'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#voice_search.start_recognition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the environment variables needed by Google SDK, then sends file path to transcribe.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str, optional): File path to transcribe. Defaults to “audio/1.flac”.</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: Transcribed text from audio file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Car Rental Website</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Task-A</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_utils.html">database_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask_api.html">flask_api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flask_main.html">flask_main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forms.html">forms module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">voice_search module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#task-b">Task-B</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Task-A</a><ul>
+      <li>Previous: <a href="forms.html" title="previous chapter">forms module</a></li>
+      <li>Next: <a href="agent.html" title="next chapter">agent module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ryan Cassidy, Vineet Bugtani, Akshay Salunke, Pui Ling Chan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/voice_search.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
