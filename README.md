@@ -62,6 +62,7 @@ Master tests just require the correct packages to be installed.
 ### Sphinx
 Sphinx documentation has been generated and can be viewed in a browser by opening the html under docs/_build/html/index.html
 
+### Voice Recognition
 `Master/audio` folder contains a few sample audio clips to test voice search.
 To run voice search:
 - Run the flask website in one terminal.
