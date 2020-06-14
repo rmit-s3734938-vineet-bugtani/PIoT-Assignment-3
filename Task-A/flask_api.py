@@ -269,6 +269,7 @@ class UserModelView(Controller):
     Part of flask_admin API that display, create and add Users into the database. 
     """
     column_list = ('FirstName','LastName','UserName','Email','Role')
+    column_searchable_list = ('FirstName','LastName','UserName','Email','Role')
 
 class CarModelView(Controller):
     """
