@@ -31,16 +31,18 @@ def authorize_engineer(message):
     response = requests.get(request.host_url + "/engineer/mac/" + deviceaddress)
     engineer = json.loads(response.text)
     # Check if engineer is registered to work on carID
-    response = requests.get(request.host_url + "/repairsByUsername/" + engineer[0]["UserName"])
+    response = requests.get(request.host_url + "/pendingRepairsByUsername/" + engineer[0]["UserName"])
     repairs = json.loads(response.text)
     # Return engineer name, true or false
     auth = False
     for item in repairs:
         if carID == str(item['CarID']):
             auth = True
-    print(auth)
+            data = {"RepairID":item['RepairID'], "CarID":item['CarID']}
+            requests.post(request.host_url + "/fixcar", json=data)
     return auth, engineer[0]["UserName"]
 
+# Get engineer profile event
 @sios.on('qr_profile')
 def get_profile(message):
     # Request engineer profile from receieved qr username
@@ -50,8 +52,3 @@ def get_profile(message):
         return False, profile
     # Return profile information
     return True, profile
-
-# Get engineer profile event
-@sios.on('profile')
-def get_profile(message):
-    return

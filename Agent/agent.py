@@ -80,7 +80,6 @@ class agentClient:
             # Verify engineer authorization for car via device address
             print("Checking engineer authorization")
             auth, name = self.sioc.call('authorize', data=[self.carID, device_address])
-            print(auth)
             if auth == False:
                 print("Engineer " + name + " is not authorized to work on this car")
                 print("Returning to menu")
