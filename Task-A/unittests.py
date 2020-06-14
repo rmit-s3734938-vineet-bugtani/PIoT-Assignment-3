@@ -5,12 +5,13 @@ import requests, json
 from passlib.hash import sha256_crypt
 from json import JSONEncoder
 import datetime
-from datetime import date, time 
+from datetime import date, time
+import voice_search
 
 
 class TestStringMethods(unittest.TestCase):
     # Will change depending on which device the code is run
-    BASE_URL = request.host_url
+    BASE_URL = "http://192.168.1.225:5000"
     INCORRECT_USERNAME = "mWoodss"
 
     # Tests for "/engineer/<username>" - API to get engineer profile by username
@@ -84,6 +85,30 @@ class TestStringMethods(unittest.TestCase):
         data = json.loads(response.text)
         self.assertEqual(data["message"], "Password not supplied")
         self.assertEqual(response.status_code, 400)
+    
+    def test_audio_one(self):
+        text = voice_search.start_recognition("audio/1.flac")
+        self.assertEqual(text, "Alto")
+    
+    def test_audio_two(self):
+        text = voice_search.start_recognition("audio/2.flac")
+        self.assertEqual(text, "black")
+    
+    def test_audio_three(self):
+        text = voice_search.start_recognition("audio/3.flac")
+        self.assertEqual(text, "blue")
+
+    def test_audio_four(self):
+        text = voice_search.start_recognition("audio/4.flac")
+        self.assertEqual(text, "Civic")
+    
+    def test_audio_five(self):
+        text = voice_search.start_recognition("audio/5.flac")
+        self.assertEqual(text, "Red and black honda sedan")
+    
+    def test_audio_six(self):
+        text = voice_search.start_recognition("audio/6.flac")
+        self.assertEqual(text, "Red honda")
     
 
 if __name__ == "__main__":
