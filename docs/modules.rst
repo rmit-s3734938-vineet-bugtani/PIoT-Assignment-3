@@ -1,4 +1,4 @@
-Task-A
+Master
 ======
 
 .. toctree::
@@ -12,7 +12,7 @@ Task-A
    voice_search
 
 
-Task-B
+Agent
 ======
 
 .. toctree::
