@@ -1,8 +1,11 @@
 import MySQLdb
 
-
 class DatabaseUtils:
-    # Clone of DB from second assignment.
+    """Databse utils to connect to db and create tables for the first time.
+
+    Returns:
+        None: None
+    """
     HOST = "35.244.76.61"
     USER = "root"
     PASSWORD = "abc123"
