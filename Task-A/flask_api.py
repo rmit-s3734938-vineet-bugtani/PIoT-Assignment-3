@@ -244,8 +244,8 @@ class RepairDetailsSchema(ma.Schema):
 
     class Meta:
         fields = (
-            "RepairID", 
-            "AssignedDate", 
+            "RepairID",
+            "AssignedDate",
             "Status",
             "UserName",
             "CarID",
@@ -259,26 +259,26 @@ class RepairDetailsSchema(ma.Schema):
 
 class BookingModelView(Controller):
     """
-    Part of flask_admin API that display, create and add Bookings into the database. 
+    Part of flask_admin API that display, create and add Bookings into the database.
     """
     can_create = False
     column_list = ('BookingID','PickUpDate','PickUpTime','ReturnDate','ReturnTime','CarID','UserName')
 
 class UserModelView(Controller):
     """
-    Part of flask_admin API that display, create and add Users into the database. 
+    Part of flask_admin API that display, create and add Users into the database.
     """
     column_list = ('UserID','FirstName','LastName','UserName','Email','Role')
     column_searchable_list = ("UserID","FirstName","LastName","UserName","Email","Role")
-    
+
 class CarModelView(Controller):
     """
-    Part of flask_admin API that display, create and add Cars into the database. 
+    Part of flask_admin API that display, create and add Cars into the database.
     """
     column_list = ('CarID','Make','Type','Location','Color','Seats','CostPerHour', 'Status')
     column_searchable_list = ["CarID","Make", "Type", "Color", "Seats", "Status"]
 
-    @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?') 
+    @action('approve', 'Report', 'Are you sure you want to report faults in selected cars?')
     def action_approve(self, ids):
         return flask.redirect(url_for('site.reportFault', ids = ids))
 
@@ -296,7 +296,7 @@ repairDetailsSchema = RepairDetailsSchema(many=True)
 def getUsers():
     """
     Retrieve users' information from database.
-    
+
     Returns:
         JSON: User information (e.g "UserID", "FirstName", "LastName", "UserName", "Email", "Role")
     """
@@ -342,7 +342,7 @@ def getdeviceAddresses():
     users = User.query.add_column("DeviceAddress").filter_by(Role = 'Engineer').all()
     result = usersSchema.dump(users)
     return jsonify(result)
-    
+
 # API to get pending repairs by engineer's username
 @api.route("/pendingRepairsByUsername/<username>", methods=["GET"])
 def getPendingRepairsByUsername(username):
@@ -453,14 +453,14 @@ def reportFaults():
     result = usersSchema.dump(user)
     if(len(result) == 0):
         return jsonify({"message": "Invalid engineer username"}), 404
-    
+
     carIds = data["carIds"]
     for x in carIds:
         car = Car.query.filter(Car.CarID == x )
         result = carsSchema.dump(car)
         if(len(result) == 0):
             return jsonify({"message": "Invalid car id"}), 404
-    
+
     for x in carIds:
         newRepair = Repairs(
             CarID=x,
@@ -480,7 +480,7 @@ def reportFaults():
 @api.route("/loginUser", methods=["GET", "POST"])
 def checkLogin():
     """
-    Retrieve login information from database and verify login details based on username and password. 
+    Retrieve login information from database and verify login details based on username and password.
 
     Returns:
         JSON: "message": "Invalid username or password"/"Success"
