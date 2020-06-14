@@ -16,9 +16,9 @@ class TestStringMethods(unittest.TestCase):
 
     # Tests for "/engineer/<username>" - API to get engineer profile by username
     def test_engineer_inCorrectUsername(self):
-        response = requests.post(self.BASE_URL+"/engineer/"+self.INCORRECT_USERNAME)
+        response = requests.get(self.BASE_URL+"/engineer/"+self.INCORRECT_USERNAME)
         data = json.loads(response.text)
-        self.assertEqual(data["message"], "Invalid engineer username")
+        self.assertEqual(data["message"], "Invalid username")
         self.assertEqual(response.status_code, 404)
 
     # Tests for "/reportFaults" - API to assign faulty cars
@@ -88,27 +88,31 @@ class TestStringMethods(unittest.TestCase):
     
     def test_audio_one(self):
         text = voice_search.start_recognition("audio/1.flac")
-        self.assertEqual(text, "Alto")
+        self.assertEqual(text.lower(), "alto")
     
     def test_audio_two(self):
         text = voice_search.start_recognition("audio/2.flac")
-        self.assertEqual(text, "black")
+        self.assertEqual(text.lower(), "black")
     
     def test_audio_three(self):
         text = voice_search.start_recognition("audio/3.flac")
-        self.assertEqual(text, "blue")
+        self.assertEqual(text.lower(), "blue")
 
     def test_audio_four(self):
         text = voice_search.start_recognition("audio/4.flac")
-        self.assertEqual(text, "Civic")
+        self.assertEqual(text.lower(), "civic")
     
     def test_audio_five(self):
         text = voice_search.start_recognition("audio/5.flac")
-        self.assertEqual(text, "Red and black honda sedan")
+        self.assertEqual(text.lower(), "honda")
     
     def test_audio_six(self):
         text = voice_search.start_recognition("audio/6.flac")
-        self.assertEqual(text, "Red honda")
+        self.assertEqual(text.lower(), "red and black honda sedan")
+    
+    def test_audio_seven(self):
+        text = voice_search.start_recognition("audio/7.flac")
+        self.assertEqual(text.lower(), "red honda")
     
 
 if __name__ == "__main__":
