@@ -36,43 +36,12 @@
         position: features[i].position,
         map: map
       });
-      //   var contentString =
-      //     '<div class="card mt-5" style="width: 18rem;">' +
-      //     '<div class="card-body">' +
-      //     '<h5 class="card-title">' +
-      //     this.makes[i] +
-      //     "</h5>" +
-      //     '<p class="card-text">' +
-      //     '<i class="fas fa-car"></i>: ' +
-      //     this.types[i] +
-      //     '<i class="fas fa-male ml-2"></i> : ' +
-      //     this.seats[i] +
-      //     "</p>" +
-      //     '<p class="card-text mt-0">' +
-      //     '<i class="fas fa-dollar-sign ml-2"></i>: ' +
-      //     this.costs[i] +
-      //     "/hr" +
-      //     "</p>" +
-      //     "</div>" +
-      //     "</div>";
-      //   const infoWindow = new google.maps.InfoWindow({
-      //     content: contentString
-      //   });
-      //   marker.addListener("click", function() {
-      //     if (InfoObj.length > 0) {
-      //       InfoObj[0].set("marker", null);
-      //       InfoObj[0].close;
-      //       InfoObj[0].length = 0;
-      //     }
-      //     infoWindow.open(map, marker);
-      //     InfoObj[0] = infoWindow;
-      //   });
     }
   }
 </script>
 <script
   async
   defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmNtHGGvNZ4JUMGs9nqz8w81DL1Xnzctw&callback=initMap"
+  src="https://maps.googleapis.com/maps/api/js?key={private key}"
 ></script>
 {% endblock content %}
