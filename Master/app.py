@@ -128,7 +128,7 @@ def sendNotification(title, body):
         body (str) : Body of text.
     """
     # TODO Personal api token. Remove api token before making repo public.
-    ACCESS_TOKEN="o.nTPc8SLF2J2nCkfIJQu4ZLCitYpcN2Fc"
+    ACCESS_TOKEN="ACCESS TOKEN HERE"
     data_send = {"type": "note", "title": title, "body": body}
  
     resp = requests.post('https://api.pushbullet.com/v2/pushes', data=json.dumps(data_send),
